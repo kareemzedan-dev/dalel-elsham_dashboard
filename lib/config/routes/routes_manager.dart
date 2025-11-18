@@ -14,7 +14,6 @@ import '../../features/home/presentation/tabs/home/presentation/views/prayer_tim
 import '../../features/home/presentation/tabs/home/presentation/views/project_details_view.dart';
 import '../../features/splash/presentation/views/splash_view.dart';
 
-
 class RoutesManager {
   static const String splash = "/";
   static const String home = "home";
@@ -32,37 +31,41 @@ class RoutesManager {
   static const String newProjects = "newProjects";
   static const String adminProjectEdit = "adminProjectEdit";
 
-
   static Route onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case splash:
         return MaterialPageRoute(builder: (_) => const SplashView());
       case home:
         return MaterialPageRoute(builder: (_) => const HomeView());
-        case categoriesDetails:
+      case categoriesDetails:
         return MaterialPageRoute(builder: (_) => const CategoriesDetailsView());
-        case projectDetails:
+      case projectDetails:
         return MaterialPageRoute(builder: (_) => const ProjectDetailsView());
-        case dalelElsham:
+      case dalelElsham:
         return MaterialPageRoute(builder: (_) => const DalelElshamTabView());
-        case jobOpportunities:
+      case jobOpportunities:
         return MaterialPageRoute(builder: (_) => const JobOpportunitiesView());
-        case jobSeekers:
+      case jobSeekers:
         return MaterialPageRoute(builder: (_) => const JobSeekersView());
-        case prayerTimes:
+      case prayerTimes:
         return MaterialPageRoute(builder: (_) => const PrayerTimesView());
 
-
-        case addNewService:
+      case addNewService:
         return MaterialPageRoute(builder: (_) => const AddNewServiceView());
-        case jobOfferForm:
+      case jobOfferForm:
         return MaterialPageRoute(builder: (_) => const JobOfferFormView());
-        case jobRequestForm:
+      case jobRequestForm:
         return MaterialPageRoute(builder: (_) => const JobRequestFormView());
-        case newProjects:
+      case newProjects:
         return MaterialPageRoute(builder: (_) => const NewProjectsView());
-        case adminProjectEdit:
-        return MaterialPageRoute(builder: (_) => const AdminProjectEditView());
+      case adminProjectEdit:
+        final arguments = settings.arguments as Map<String, String>;
+        return MaterialPageRoute(
+          builder: (_) => AdminProjectEditView(
+            projectId: arguments["projectId"]!,
+            projectTitle: arguments["projectTitle"]!,
+          ),
+        );
 
       default:
         return MaterialPageRoute(builder: (_) => const Placeholder());

@@ -1,8 +1,22 @@
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/domain/entities/project_entity.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/projects/get_project_details_view_model/get_project_details_view_model.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/projects/update_project_view_model/update_project_view_model.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/projects/update_project_view_model/update_project_view_model_states.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/widgets/project_images_section.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/widgets/project_info_section.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/widgets/social_links_section.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/widgets/working_hours_section.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:dlyl_alsham_dashboard/core/utils/colors_manager.dart';
-import 'package:dlyl_alsham_dashboard/core/utils/assets_manager.dart';
-import '../../../../../../../core/components/custom_text_field.dart';
+
+import '../../../../../../../core/components/confirmation_dialog.dart';
+import '../../../../../../../core/services/image_picker_service.dart';
+import '../../../../../../../core/services/image_upload_service.dart';
+import '../manager/projects/get_project_details_view_model/get_project_details_view_model_states.dart';
+import 'action_buttons_section.dart';
+import 'ad_settings_section.dart';
+import 'gallery_section.dart';
 
 class AdminProjectEditViewBody extends StatefulWidget {
   const AdminProjectEditViewBody({super.key});
@@ -20,341 +34,233 @@ class _AdminProjectEditViewBodyState extends State<AdminProjectEditViewBody> {
   final facebookController = TextEditingController();
   final instagramController = TextEditingController();
   final websiteController = TextEditingController();
-  final fromController = TextEditingController(text: "9:00 صباحًا");
-  final toController = TextEditingController(text: "9:00 مساءً");
-  String tier = "normal"; // default
-  final durationController = TextEditingController(text: "30"); // مدة الإعلان بالأيام
+  final fromController = TextEditingController();
+  final toController = TextEditingController();
+  final durationController = TextEditingController(text: "30");
+  final mapLinkController = TextEditingController();
+  final imagePicker = ImagePickerService();
+  final imageUploader = ImageUploadService();
+  bool isInitialized = false;
 
-  List<String> galleryImages = [
-    AssetsManager.project1,
-    AssetsManager.project2,
-    AssetsManager.project3,
-  ];
+  String tier = "normal";
+  bool isActive = false;
 
-  bool isActive = true;
+  List<String> galleryImages = [];
+  List<String> additionalImages = [];
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(16.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+    return BlocBuilder<
+      GetProjectDetailsViewModel,
+      GetProjectDetailsViewModelStates
+    >(
+      builder: (context, state) {
+        if (state is GetProjectDetailsViewModelLoading) {
+          return const Center(
+            child: CircularProgressIndicator(color: Colors.blue),
+          );
+        }
 
-                  // ----------------- صور البانر -----------------
-                  _label("صور المشروع"),
-                  SizedBox(height: 10.h),
+        if (state is GetProjectDetailsViewModelSuccess) {
+          if (!isInitialized) {
+            titleController.text = state.project.title;
+            locationController.text = state.project.location;
+            descriptionController.text = state.project.description;
+            whatsappController.text = state.project.phone;
+            durationController.text = state.project.duration;
+            tier = state.project.tier;
+            isActive = state.project.isActive;
+            galleryImages = List.from(state.project.images);
+            fromController.text = state.project.workTimeFrom ?? "";
+            toController.text = state.project.workTimeTo ?? "";
+            facebookController.text = state.project.facebook ?? "";
+            instagramController.text = state.project.instagram ?? "";
+            websiteController.text = state.project.website ?? "";
+            mapLinkController.text = state.project.mapLink ?? "";
+            additionalImages = List.from(state.project.additionalImages);
 
-                  SizedBox(
-                    height: 140.h,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        ...galleryImages.map(
-                              (e) => Container(
-                            margin: EdgeInsets.only(right: 10.w),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12.r),
-                              child: Image.asset(
-                                e,
-                                width: 200.w,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                            width: 120.w,
-                            decoration: BoxDecoration(
-                              color: ColorsManager.grey.withOpacity(0.3),
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                            child: Icon(Icons.add, size: 26.sp),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+            isInitialized = true;
+          }
 
-                  SizedBox(height: 20.h),
-
-                  // ----------------- عنوان المشروع -----------------
-                  _label("عنوان المشروع"),
-                  CustomTextFormField(
-                    hintText: "",
-                    keyboardType: TextInputType.name,
-                  ),
-                  SizedBox(height: 20.h),
-
-                  // ----------------- الموقع -----------------
-                  _label("الموقع"),
-                  CustomTextFormField(
-                    hintText: "",
-                    keyboardType: TextInputType.name,
-                  ),
-                  SizedBox(height: 20.h),
-
-                  // ----------------- رقم الهاتف -----------------
-                  _label("رقم الهاتف + واتس اب"),
-                  CustomTextFormField(
-                    hintText: "",
-                    keyboardType: TextInputType.phone,
-                  ),
-                  SizedBox(height: 20.h),
-
-                  // ----------------- الوصف -----------------
-                  _label("الوصف"),
-                  CustomTextFormField(
-                    hintText: "",
-                    maxLines: 5,
-                    keyboardType: TextInputType.multiline,
-                  ),
-
-                  SizedBox(height: 20.h),
-
-                  // ----------------- وقت العمل -----------------
-                  _label("وقت العمل"),
-                  SizedBox(height: 10.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _labeledTextField("من الساعة", fromController),
-                      ),
-                      SizedBox(width: 16.w),
-                      Expanded(
-                        child: _labeledTextField("إلى الساعة", toController),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 20.h),
-
-                  // ----------------- روابط التواصل -----------------
-                  _label("روابط التواصل"),
-                  SizedBox(height: 10.h),
-
-                  _labeledTextField("رابط فيسبوك", facebookController),
-                  _labeledTextField("رابط إنستغرام", instagramController),
-                  _labeledTextField("الموقع الإلكتروني", websiteController),
-
-                  SizedBox(height: 20.h),
-// ---------------- مدة الإعلان ----------------
-                  _label("مدة الإعلان"),
-                  _durationField(),
-                  SizedBox(height: 20.h),
-
-// ---------------- نوع الإعلان ----------------
-                  _label("نوع الإعلان"),
-                  _tierDropdown(),
-                  SizedBox(height: 20.h),
-
-                  // ----------------- معرض الصور -----------------
-                  _label("معرض الصور"),
-                  SizedBox(height: 10.h),
-
-                  Wrap(
-                    spacing: 10.w,
-                    runSpacing: 10.h,
-                    children: [
-                      ...galleryImages.map(
-                            (img) => Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12.r),
-                              child: Image.asset(
-                                img,
-                                width: 110.w,
-                                height: 110.h,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Positioned(
-                              right: 4,
-                              top: 4,
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  padding: EdgeInsets.all(4),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.red,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(Icons.close,
-                                      color: Colors.white, size: 16.sp),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          width: 110.w,
-                          height: 110.h,
-                          decoration: BoxDecoration(
-                            color: ColorsManager.grey.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Icon(Icons.add, size: 26.sp),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 20.h),
-
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(16.r),
-                    ),
-                    child: SwitchListTile(
-                      activeColor: ColorsManager.primaryColor,
-                      title: const Text("تفعيل عداد المشاهدات"),
-                      value: isActive,
-                      onChanged: (v) {
-                        setState(() => isActive = v);
-                      },
-                    ),
-                  ),
-
-                  SizedBox(height: 30.h),
-                ],
-              ),
-            ),
-          ),
-        ),
-
-        Container(
-          padding: EdgeInsets.all(16.w),
-          width: double.infinity,
-          child: Row(
+          return Column(
             children: [
               Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    padding: EdgeInsets.symmetric(vertical: 14.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                  ),
-                  onPressed: () {
-                    // TODO: تنفيذ عملية نشر الإعلان
-                  },
-                  child: Text(
-                    "موافقة ونشر الإعلان",
-                    style: TextStyle(fontSize: 15.sp, color: Colors.white),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ProjectImagesSection(
+                        images: galleryImages,
+                        onAddImage: () {},
+                      ),
+                      SizedBox(height: 20.h),
+
+                      ProjectInfoSection(
+                        titleController: titleController,
+                        locationController: locationController,
+                        descriptionController: descriptionController,
+                        phoneController: whatsappController,
+                      ),
+                      SizedBox(height: 20.h),
+
+                      WorkingHoursSection(
+                        fromController: fromController,
+                        toController: toController,
+                      ),
+                      SizedBox(height: 20.h),
+
+                      SocialLinksSection(
+                        facebookController: facebookController,
+                        instagramController: instagramController,
+                        websiteController: websiteController,
+                        mapLinkController: mapLinkController,
+                      ),
+
+                      AdSettingsSection(
+                        durationController: durationController,
+                        tier: tier,
+                        onTierChanged: (value) => setState(() => tier = value!),
+                        isActive: isActive,
+                        onActiveChanged: (value) =>
+                            setState(() => isActive = value),
+                      ),
+                      SizedBox(height: 20.h),
+
+                      GallerySection(
+                        images: additionalImages,
+                        onAddImage: () async {
+                          final picked = await imagePicker.pickFromGallery();
+                          if (picked.isEmpty) return;
+
+                          final url = await imageUploader.uploadImage(
+                            bytes: picked.bytes!,
+                            bucket: "projects",
+                            folder: "additional",
+                          );
+
+                          if (url != null) {
+                            setState(() {
+                              additionalImages.add(url);
+                            });
+                          }
+                        },
+                        onRemoveImage: (index) {
+                          setState(() {
+                            additionalImages.removeAt(index);
+                          });
+                        },
+                      ),
+
+                      SizedBox(height: 30.h),
+                    ],
                   ),
                 ),
               ),
 
-              SizedBox(width: 12.w),
+              BlocConsumer<
+                UpdateProjectViewModel,
+                UpdateProjectViewModelStates
+              >(
+                listener: (context, updateState) {
+                  if (updateState is UpdateProjectViewModelSuccess) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("تم تحديث المشروع بنجاح")),
+                    );
+                    Navigator.pop(context);
+                  } else if (updateState is UpdateProjectViewModelError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(updateState.message)),
+                    );
+                  }
+                },
+                builder: (context, updateState) {
+                  return ActionButtonsSection(
+                    onApprove: () {
+                      showConfirmationDialog(
+                        context: context,
+                        title: "تأكيد الموافقة",
+                        message: "هل أنت متأكد من الموافقة على هذا المشروع؟",
+                        onConfirm: () {
+                          context.read<UpdateProjectViewModel>().updateProject(
+                            ProjectEntity(
+                              id: state.project.id,
+                              title: titleController.text,
+                              description: descriptionController.text,
+                              categoryTitle: state.project.categoryTitle,
+                              images: galleryImages,
+                              logo: state.project.logo,
+                              phone: whatsappController.text,
+                              location: locationController.text,
+                              isActive: true,
+                              facebook: facebookController.text,
+                              instagram: instagramController.text,
+                              website: websiteController.text,
+                              mapLink: mapLinkController.text,
+                              whatsapp: whatsappController.text,
+                              workTimeFrom: fromController.text,
+                              workTimeTo: toController.text,
+                              duration: durationController.text,
+                              createdAt: state.project.createdAt,
+                              status: "approved",
+                              additionalImages: additionalImages,
 
-              Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: EdgeInsets.symmetric(vertical: 14.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                  ),
-                  onPressed: () {
-                    // TODO: تنفيذ عملية رفض الإعلان
-                  },
-                  child: Text(
-                    "رفض / إلغاء الموافقة",
-                    style: TextStyle(fontSize: 15.sp, color: Colors.white),
-                  ),
-                ),
+                              tier: tier,
+                              viewCountOn: isActive,
+                            ),
+                          );
+                        },
+                        onCancel: () {},
+                      );
+                    },
+                    onReject: () {
+                      showConfirmationDialog(
+                        context: context,
+                        title: "تأكيد الرفض",
+                        message: "هل أنت متأكد من رفض هذا المشروع؟",
+                        onConfirm: () {
+                          context.read<UpdateProjectViewModel>().updateProject(
+                            ProjectEntity(
+                              id: state.project.id,
+                              title: titleController.text,
+                              description: descriptionController.text,
+                              categoryTitle: state.project.categoryTitle,
+                              images: galleryImages,
+                              logo: state.project.logo,
+                              phone: whatsappController.text,
+                              location: locationController.text,
+                              isActive: false,
+                              facebook: facebookController.text,
+                              instagram: instagramController.text,
+                              website: websiteController.text,
+                              mapLink: mapLinkController.text,
+                              whatsapp: whatsappController.text,
+                              workTimeFrom: fromController.text,
+                              workTimeTo: toController.text,
+                              duration: durationController.text,
+                              createdAt: state.project.createdAt,
+                              status: "rejected",
+                              additionalImages: additionalImages,
+
+                              tier: tier,
+                              viewCountOn: isActive,
+                            ),
+                          );
+                        },
+                        onCancel: () {},
+                      );
+                    },
+                  );
+                },
               ),
+
+              SizedBox(height: 12.h),
             ],
-          ),
-        ),
-        SizedBox(height: 12.h,)
+          );
+        }
 
-      ],
+        return const Text("حدث خطأ");
+      },
     );
   }
-
-  // --------------------- Widgets Helpers ---------------------
-
-  Widget _label(String text) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: 16.sp,
-        fontWeight: FontWeight.bold,
-        color: ColorsManager.primaryColor,
-      ),
-    );
-  }
-
-  Widget _labeledTextField(String label, TextEditingController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style:
-          TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
-        ),
-        SizedBox(height: 8.h),
-        TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            filled: true,
-            fillColor: Colors.grey.shade100,
-          ),
-        ),
-        SizedBox(height: 16.h),
-      ],
-    );
-  }
-
-  Widget _tierDropdown() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-
-        SizedBox(height: 6.h),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.r),
-            color: Colors.grey.shade100,
-            border: Border.all(color: Colors.grey),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: tier,
-              items: const [
-                DropdownMenuItem(value: "normal", child: Text("عادي")),
-                DropdownMenuItem(value: "silver", child: Text("فضي")),
-                DropdownMenuItem(value: "gold", child: Text("ذهبي")),
-              ],
-              onChanged: (val) {
-                setState(() => tier = val!);
-              },
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-  Widget _durationField() {
-    return _labeledTextField("مدة الإعلان (بالأيام)", durationController);
-  }
-
 }

@@ -5,16 +5,19 @@ import '../utils/assets_manager.dart';
 import '../utils/colors_manager.dart';
 
 class MobileNumberField extends StatelessWidget {
-  const MobileNumberField({
+    MobileNumberField({
     super.key,
     required this.controller,
     this.hintText = "رقم الموبايل",
     this.onChanged,
+    this.validator,
   });
 
   final TextEditingController controller;
   final String hintText;
   final Function(String)? onChanged;
+  String? Function(String?)? validator;
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,16 +61,17 @@ class MobileNumberField extends StatelessWidget {
             color: Colors.grey.shade300,
           ),
 
-          SizedBox(width: 12.w),
 
           /// TextField للرقم
           Expanded(
-            child: TextField(
+            child: TextFormField(
               controller: controller,
               keyboardType: TextInputType.phone,
               onChanged: onChanged,
-              style: TextStyle(
-                fontSize: 15.sp,
+              validator: validator ,
+
+              style:  Theme.of(context).textTheme.bodyLarge!.copyWith(
+                fontSize: 14.sp,
                 color: ColorsManager.black.withOpacity(0.8),
                 fontWeight: FontWeight.w500,
               ),

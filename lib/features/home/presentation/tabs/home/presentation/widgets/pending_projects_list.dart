@@ -27,7 +27,10 @@ class PendingProjectsList extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical:  8.0),
                 child: PendingProjectCard(
                   onTap: () {
-                    Navigator.pushNamed(context, RoutesManager.adminProjectEdit);
+                    Navigator.pushNamed(context, RoutesManager.adminProjectEdit,arguments: {
+                      "projectId": state.projects[index].id,
+                      "projectTitle": state.projects[index].title,
+                    });
                   },
                   project: state.projects[index],
                 ),

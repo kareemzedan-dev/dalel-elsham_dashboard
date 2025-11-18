@@ -24,6 +24,7 @@ class ProjectModel extends ProjectEntity {
     required super.views,
     required super.workTimeFrom,
     required super.workTimeTo,
+    required super.viewCountOn,
 
   });
 
@@ -55,6 +56,7 @@ class ProjectModel extends ProjectEntity {
       views: map['views'] ?? 0,
       workTimeFrom: map['workTimeFrom'] ?? '',
       workTimeTo: map['workTimeTo'] ?? '',
+      viewCountOn: map['viewCountOn'] ?? false,
     );
   }
 
@@ -85,6 +87,7 @@ class ProjectModel extends ProjectEntity {
       'views': views,
       'workTimeFrom': workTimeFrom,
       'workTimeTo': workTimeTo,
+      'viewCountOn': viewCountOn,
     };
   }
 }
