@@ -1,0 +1,15 @@
+
+import '../../../../data/models/banner_model.dart';
+import '../../../../domain/entities/banner_entity.dart';
+
+abstract class GetBannersByPositionViewModelStates {}
+class GetBannersByPositionViewModelStatesInitial extends GetBannersByPositionViewModelStates {}
+class GetBannersByPositionViewModelStatesLoading extends GetBannersByPositionViewModelStates {}
+class GetBannersByPositionViewModelStatesSuccess extends GetBannersByPositionViewModelStates {
+  final List<BannerEntity> banners;
+  GetBannersByPositionViewModelStatesSuccess({required this.banners});
+}
+class GetBannersByPositionViewModelStatesError extends GetBannersByPositionViewModelStates {
+  final String message;
+  GetBannersByPositionViewModelStatesError({required this.message});
+}
