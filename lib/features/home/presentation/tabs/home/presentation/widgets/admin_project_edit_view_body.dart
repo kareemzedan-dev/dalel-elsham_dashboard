@@ -1,3 +1,5 @@
+import 'package:dlyl_alsham_dashboard/config/routes/routes_manager.dart';
+import 'package:dlyl_alsham_dashboard/core/components/dismissible_error_card.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/domain/entities/project_entity.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/projects/get_project_details_view_model/get_project_details_view_model.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/projects/update_project_view_model/update_project_view_model.dart';
@@ -164,13 +166,21 @@ class _AdminProjectEditViewBodyState extends State<AdminProjectEditViewBody> {
               >(
                 listener: (context, updateState) {
                   if (updateState is UpdateProjectViewModelSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("تم تحديث المشروع بنجاح")),
+                    showTemporaryMessage(
+                      context,
+                      "تم تحديث المشروع بنجاح",
+                      MessageType.success,
                     );
-                    Navigator.pop(context);
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      RoutesManager.home,
+                      (route) => false,
+                    );
                   } else if (updateState is UpdateProjectViewModelError) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(updateState.message)),
+                    showTemporaryMessage(
+                      context,
+                      updateState.message,
+                      MessageType.error,
                     );
                   }
                 },

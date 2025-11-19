@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../features/home/presentation/tabs/dalel_elsham/presentation/views/dalel_elsham_tab_view.dart';
 import '../../features/home/presentation/tabs/home/presentation/views/Job_opportunities_view.dart';
+import '../../features/home/presentation/tabs/home/presentation/views/Job_opportunities_view_management.dart';
 import '../../features/home/presentation/tabs/home/presentation/views/Job_seekers_view.dart';
 import '../../features/home/presentation/tabs/home/presentation/views/add_new_service_view.dart';
 import '../../features/home/presentation/tabs/home/presentation/views/admin_project_edit_view.dart';
@@ -30,6 +31,7 @@ class RoutesManager {
   static const String jobRequestForm = "jobRequestForm";
   static const String newProjects = "newProjects";
   static const String adminProjectEdit = "adminProjectEdit";
+  static const String jobOpportunitiesManagement = "jobOpportunitiesManagement";
 
   static Route onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -66,6 +68,9 @@ class RoutesManager {
             projectTitle: arguments["projectTitle"]!,
           ),
         );
+        case jobOpportunitiesManagement:
+        return MaterialPageRoute(builder: (_) => const JobOpportunitiesViewManagement());
+
 
       default:
         return MaterialPageRoute(builder: (_) => const Placeholder());

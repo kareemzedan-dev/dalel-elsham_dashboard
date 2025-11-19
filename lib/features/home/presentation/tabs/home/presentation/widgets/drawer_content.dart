@@ -22,13 +22,13 @@ class DrawerContent extends StatelessWidget {
                 icon: Icons.dashboard,
                 title: 'اداره المشاريع الجديده',
                 onTap: () {
-                 // Navigator.pushNamed(context, Routes.newOrdersScreen);
+               Navigator.pushNamed(context, RoutesManager.newProjects);
                 },
               ),
 
               DrawerItem(
                 icon: Icons.campaign,
-                title: 'إدارة الإعلانات',
+                title: 'إدارة فرص العمل',
                 onTap: () {
                //   Navigator.pushNamed(context, Routes.manageBannersScreen);
                 },
@@ -36,7 +36,7 @@ class DrawerContent extends StatelessWidget {
 
               DrawerItem(
                 icon: Icons.home_repair_service,
-                title: 'إدارة الخدمات / المشاريع',
+                title: 'اداره طلبات العمل',
                 onTap: () {
                 //  Navigator.pushNamed(context, Routes.manageServicesScreen);
                 },
