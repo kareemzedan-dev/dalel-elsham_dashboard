@@ -20,25 +20,20 @@ class GetAllJobsRemoteDataSourceImpl implements GetAllJobsRemoteDataSource {
         return Left(NetworkFailure("لا يوجد اتصال بالإنترنت"));
       }
 
-      // 2) جلب الداتا
+      // 2) جلب كل البيانات
       final data = await firebaseService.getCollection(
         collection: "jobs",
       );
 
+      print("RAW JOBS DATA: $data");
 
-
-      print("RAW JOBS DATA: $data"); // 👈 اطبع البيانات الخام من فايرستور
-
+      // 3) فلترة ال status فقط → pending
       final filtered = data.where((item) {
-        final bool isActive = item["isActive"] == true;
-        final String status =
-        (item["status"] ?? "").toString().trim().toLowerCase();
-
-        return isActive && status == "accepted";
+        final status = (item["status"] ?? "").toString().toLowerCase().trim();
+        return status == "pending";    // 👈 هنا التغيير
       }).toList();
 
-      print("FILTERED JOBS: $filtered"); // 👈 اطبع بعد الفلترة
-
+      print("FILTERED JOBS BY STATUS (pending): $filtered");
 
       // 4) تحويل لموديل
       final jobs = filtered

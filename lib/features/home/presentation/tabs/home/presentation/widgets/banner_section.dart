@@ -1,19 +1,26 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dlyl_alsham_dashboard/config/routes/routes_manager.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/domain/entities/banner_entity.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../../../../core/services/open_url_service.dart';
 import '../../../../../../../core/utils/colors_manager.dart';
 class BannerSection extends StatefulWidget {
   const BannerSection({
     super.key,
     required this.images,
     this.showDotsOnTop = false,
-    this.onAddBanner,
+    this.disableAutoPlay = false,
+    this.onDelete,
   });
 
-  final List<String> images;
+  final List<BannerEntity> images;
   final bool showDotsOnTop;
-  final VoidCallback? onAddBanner; // ← زر إضافة إعلان
+  final bool disableAutoPlay;
+
+  /// 🔥 دالة الحذف الجديدة
+  final Function(String bannerId)? onDelete;
 
   @override
   State<BannerSection> createState() => _BannerSectionState();
@@ -24,34 +31,9 @@ class _BannerSectionState extends State<BannerSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        widget.showDotsOnTop
-            ? _buildStackedCarousel()
-            : _buildColumnCarousel(),
-
-        // زر إضافة إعلان
-        Positioned(
-          top: 14,
-          left: 14,
-          child: GestureDetector(
-            onTap: widget.onAddBanner,
-            child: Container(
-              padding: EdgeInsets.all(8.r),
-              decoration: BoxDecoration(
-                color: ColorsManager.primaryColor,
-                shape: BoxShape.circle,
-              ),
-              child:   Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 24.sp,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+    return widget.showDotsOnTop
+        ? _buildStackedCarousel()
+        : _buildColumnCarousel();
   }
 
   Widget _buildColumnCarousel() {
@@ -69,10 +51,7 @@ class _BannerSectionState extends State<BannerSection> {
       alignment: Alignment.bottomCenter,
       children: [
         _buildCarousel(),
-        Positioned(
-          bottom: 12.h,
-          child: _buildDotsIndicator(),
-        ),
+        Positioned(bottom: 12.h, child: _buildDotsIndicator()),
       ],
     );
   }
@@ -81,39 +60,87 @@ class _BannerSectionState extends State<BannerSection> {
     return CarouselSlider.builder(
       itemCount: widget.images.length,
       itemBuilder: (context, index, realIndex) {
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.w),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12.r),
-            child: Image.asset(
-              widget.images[index],
-              fit: BoxFit.cover,
-              width: double.infinity,
+        final banner = widget.images[index];
+
+        return Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4.w),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.r),
+                child: GestureDetector(
+                  onTap: () {
+                    if (banner.type == "external") {
+                      openUrl(banner.link!);
+                    } else if (banner.type == "internal") {
+                      Navigator.pushNamed(
+                        context,
+                        RoutesManager.projectDetails,
+                        arguments: {"projectId": banner.projectId},
+                      );
+                    }
+                  },
+                  child: Image.network(
+                    banner.imageUrl,
+                    fit: BoxFit.fill,
+                    width: double.infinity,
+                  ),
+                ),
+              ),
             ),
-          ),
+
+            /// ---------------- زر الحذف ----------------
+            Positioned(
+              top: 12,
+              right: 12,
+              child: InkWell(
+                onTap: () {
+                  if (widget.onDelete != null) {
+                    widget.onDelete!(banner.id); // ← إرسال ID
+                  }
+                },
+                child: Container(
+                  padding: EdgeInsets.all(6.w),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.8),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                    size: 20.sp,
+                  ),
+                ),
+              ),
+            ),
+          ],
         );
       },
       options: CarouselOptions(
         height: 200.h,
-        autoPlay: true,
+        autoPlay: !widget.disableAutoPlay,
         autoPlayInterval: const Duration(seconds: 5),
         autoPlayAnimationDuration: const Duration(milliseconds: 800),
         autoPlayCurve: Curves.easeInOut,
         viewportFraction: 1.0,
-        onPageChanged: (i, r) => setState(() => _currentIndex = i),
+        enlargeCenterPage: false,
+        onPageChanged: (index, reason) => setState(() => _currentIndex = index),
       ),
     );
   }
 
   Widget _buildDotsIndicator() {
     return DotsIndicator(
-      dotsCount: widget.images.length,
+      dotsCount: widget.images.length > 0 ? widget.images.length : 1,
       position: _currentIndex.toDouble(),
       decorator: DotsDecorator(
         activeColor: ColorsManager.primaryColor,
         color: Colors.grey.shade400,
         size: const Size(8, 8),
         activeSize: const Size(12, 12),
+        activeShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
       ),
     );
   }

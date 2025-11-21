@@ -24,24 +24,24 @@ class HomeViewBody extends StatelessWidget {
             children: [
               TopBarSection(),
               SizedBox(height: 30.h),
-              BannerSection(
-                images: [
-                  AssetsManager.banner,
-                  AssetsManager.banner2,
-                ],
-                onAddBanner: () {
-
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (_) => SizedBox(
-                      height: 200,
-                      child: Center(
-                        child: Text("هنا هتحط UI رفع الإعلان"),
-                      ),
-                    ),
-                  );
-                },
-              ),
+              // BannerSection(
+              //   images: [
+              //     AssetsManager.banner,
+              //     AssetsManager.banner2,
+              //   ],
+              //   onAddBanner: () {
+              //
+              //     showModalBottomSheet(
+              //       context: context,
+              //       builder: (_) => SizedBox(
+              //         height: 200,
+              //         child: Center(
+              //           child: Text("هنا هتحط UI رفع الإعلان"),
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // ),
 
               SizedBox(height: 30.h),
            //  CategoriesSection(),

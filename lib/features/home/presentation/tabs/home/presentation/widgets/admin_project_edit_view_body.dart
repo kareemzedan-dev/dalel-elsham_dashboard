@@ -217,6 +217,8 @@ class _AdminProjectEditViewBodyState extends State<AdminProjectEditViewBody> {
 
                               tier: tier,
                               viewCountOn: isActive,
+                              views: state.project.views,
+                              displaySections: state.project.displaySections,
                             ),
                           );
                         },
@@ -254,6 +256,8 @@ class _AdminProjectEditViewBodyState extends State<AdminProjectEditViewBody> {
 
                               tier: tier,
                               viewCountOn: isActive,
+                              views: state.project.views,
+                              displaySections: state.project.displaySections,
                             ),
                           );
                         },

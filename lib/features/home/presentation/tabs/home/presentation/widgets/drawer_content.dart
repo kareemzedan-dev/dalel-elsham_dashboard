@@ -22,7 +22,7 @@ class DrawerContent extends StatelessWidget {
                 icon: Icons.dashboard,
                 title: 'اداره المشاريع الجديده',
                 onTap: () {
-               Navigator.pushNamed(context, RoutesManager.newProjects);
+                  Navigator.pushNamed(context, RoutesManager.newProjects);
                 },
               ),
 
@@ -30,7 +30,14 @@ class DrawerContent extends StatelessWidget {
                 icon: Icons.campaign,
                 title: 'إدارة فرص العمل',
                 onTap: () {
-               //   Navigator.pushNamed(context, Routes.manageBannersScreen);
+                  Navigator.pushNamed(
+                    context,
+                    RoutesManager.jobOpportunitiesManagement,
+                    arguments: {
+                      "title": "فرص عمل",
+                      "type": "opportunity",
+                    },
+                  );
                 },
               ),
 
@@ -38,15 +45,24 @@ class DrawerContent extends StatelessWidget {
                 icon: Icons.home_repair_service,
                 title: 'اداره طلبات العمل',
                 onTap: () {
-                //  Navigator.pushNamed(context, Routes.manageServicesScreen);
+                  Navigator.pushNamed(
+                    context,
+                    RoutesManager.jobOpportunitiesManagement,
+                    arguments: {
+                      "title": "طلبات العمل",
+                      "type": "job",
+                    },
+                  );
+
+
                 },
               ),
 
               DrawerItem(
                 icon: Icons.people_alt,
-                title: 'إدارة المستخدمين',
+                title: 'إدارة البانرات',
                 onTap: () {
-               //   Navigator.pushNamed(context, Routes.usersScreen);
+                 Navigator.pushNamed(context, RoutesManager.bannersManagement);
                 },
               ),
 
@@ -54,7 +70,7 @@ class DrawerContent extends StatelessWidget {
                 icon: Icons.report,
                 title: 'البلاغات والشكاوى',
                 onTap: () {
-               //   Navigator.pushNamed(context, Routes.reportsScreen);
+                  //   Navigator.pushNamed(context, Routes.reportsScreen);
                 },
               ),
 
@@ -62,7 +78,7 @@ class DrawerContent extends StatelessWidget {
                 icon: Icons.settings,
                 title: 'الإعدادات',
                 onTap: () {
-//Navigator.pushNamed(context, Routes.settingsScreen);
+                  //Navigator.pushNamed(context, Routes.settingsScreen);
                 },
               ),
             ],

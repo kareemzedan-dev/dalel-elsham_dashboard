@@ -11,7 +11,6 @@ import '../../../../models/job_model.dart';
 @Injectable(as: GetAllOpportunitiesRemoteDataSource)
 class GetAllOpportunitiesRemoteDataSourceImpl
     implements GetAllOpportunitiesRemoteDataSource {
-
   final FirebaseService firebaseService;
 
   GetAllOpportunitiesRemoteDataSourceImpl(this.firebaseService);
@@ -19,20 +18,20 @@ class GetAllOpportunitiesRemoteDataSourceImpl
   @override
   Future<Either<Failures, List<JobEntity>>> getAllOpportunities() async {
     try {
-
-      // 1) التحقق من وجود انترنت
+      // 1) التأكد من وجود انترنت
       if (!await NetworkValidation.hasInternet()) {
         return Left(NetworkFailure("لا يوجد اتصال بالإنترنت"));
       }
 
-      // 2) جلب كل فرص العمل من Firestore
+      // 2) جلب كل البيانات من Collection opportunities
       final data = await firebaseService.getCollection(
         collection: "opportunities",
       );
 
+      // 3) فلترة الـ pending فقط
       final filtered = data.where((item) {
-        return item["status"] == "accepted" &&
-            item["isActive"] == true;
+        final status = (item["status"] ?? "").toString().toLowerCase().trim();
+        return status == "pending"; // 👈 هنا الفلترة
       }).toList();
 
       // 4) تحويل النتائج إلى JobModel
@@ -41,7 +40,6 @@ class GetAllOpportunitiesRemoteDataSourceImpl
       }).toList();
 
       return Right(opportunities);
-
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }

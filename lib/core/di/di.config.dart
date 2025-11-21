@@ -9,9 +9,30 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../features/home/presentation/tabs/dalel_elsham/data/data_sources/remote/dalel_al_sham_place_remote_data_source/dalel_al_sham_place_remote_data_source.dart'
+    as _i636;
+import '../../features/home/presentation/tabs/dalel_elsham/data/data_sources_impl/remote/dalel_al_sham_place_remote_data_source_impl/dalel_al_sham_place_remote_data_source_impl.dart'
+    as _i813;
+import '../../features/home/presentation/tabs/dalel_elsham/data/repos_impl/dalel_al_sham_place_repo_impl/dalel_al_sham_place_repo_impl.dart'
+    as _i190;
+import '../../features/home/presentation/tabs/dalel_elsham/domain/repos/dalel_al_sham_place_repo/dalel_al_sham_place_repo.dart'
+    as _i130;
+import '../../features/home/presentation/tabs/dalel_elsham/domain/use_case/dalel_al_sham_place_use_case/dalel_al_sham_place_use_case.dart'
+    as _i340;
+import '../../features/home/presentation/tabs/dalel_elsham/presentation/manager/add_place_view_model/add_place_view_model.dart'
+    as _i963;
+import '../../features/home/presentation/tabs/dalel_elsham/presentation/manager/delete_place_view_model/delete_place_view_model.dart'
+    as _i313;
+import '../../features/home/presentation/tabs/dalel_elsham/presentation/manager/get_all_place_view_model/get_all_place_view_model.dart'
+    as _i544;
+import '../../features/home/presentation/tabs/dalel_elsham/presentation/manager/update_place_view_model/update_place_view_model.dart'
+    as _i660;
+import '../../features/home/presentation/tabs/home/data/data_sources/remote/app_links_remote_data_source/app_links_remote_data_source.dart'
+    as _i455;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/banner_remote_data_source/banners_remote_data_source.dart'
     as _i1046;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/category_remote_data_source/category_remote_data_source.dart'
@@ -28,22 +49,38 @@ import '../../features/home/presentation/tabs/home/data/data_sources/remote/jobs
     as _i563;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/jobs/get_job_by_id_remote_data_source/get_job_by_id_remote_data_source.dart'
     as _i104;
+import '../../features/home/presentation/tabs/home/data/data_sources/remote/jobs/update_job_remote_data_source/update_job_remote_data_source.dart'
+    as _i956;
+import '../../features/home/presentation/tabs/home/data/data_sources/remote/jobs/update_opportunity_remote_data_source/update_opportunity_remote_data_source.dart'
+    as _i296;
+import '../../features/home/presentation/tabs/home/data/data_sources/remote/prayer_times_remote_data_source/prayer_times_remote_data_source.dart'
+    as _i564;
+import '../../features/home/presentation/tabs/home/data/data_sources/remote/project_display_sections_remote_data_source/project_display_sections_remote_data_source.dart'
+    as _i79;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/projects/add_project_remote_data_source/add_project_remote_data_source.dart'
     as _i190;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/projects/delete_project_remote_data_source/delete_project_remote_data_source.dart'
     as _i694;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/projects/get_all_projects_remote_data_source/get_all_projects_remote_data_source.dart'
     as _i804;
+import '../../features/home/presentation/tabs/home/data/data_sources/remote/projects/get_newest_projects_remote_data_source/get_newest_projects_remote_data_source.dart'
+    as _i157;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/projects/get_project_details_remote_data_source/get_project_details_remote_data_source.dart'
     as _i131;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/projects/get_projects_by_category_remote_data_source/get_projects_by_category_remote_data_source.dart'
     as _i168;
+import '../../features/home/presentation/tabs/home/data/data_sources/remote/projects/get_projects_by_display_section_remote_data_source/get_projects_by_display_section_remote_data_source.dart'
+    as _i912;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/projects/update_project_remote_data_source/update_project_remote_data_source.dart'
     as _i440;
+import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/app_links_remote_data_source_impl/app_links_remote_data_source.dart'
+    as _i635;
 import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/banner_remote_data_source_impl/banners_remote_data_source_impl.dart'
     as _i576;
 import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/category_remote_data_source_impl/category_remote_data_source_impl.dart'
     as _i924;
+import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/get_projects_by_display_section_remote_data_source_impl/get_projects_by_display_section_remote_data_source_impl.dart'
+    as _i278;
 import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/jobs/add_job_remote_data_source_impl/add_job_remote_data_source_impl.dart'
     as _i598;
 import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/jobs/add_opportunity_remote_data_source_impl/add_opportunity_remote_data_source_impl.dart'
@@ -56,6 +93,14 @@ import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote
     as _i501;
 import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/jobs/get_job_by_id_remote_data_source_impl/get_job_by_id_remote_data_source_impl.dart'
     as _i12;
+import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/jobs/update_job_remote_data_source_impl/update_job_remote_data_source_impl.dart'
+    as _i842;
+import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/jobs/update_opportunity_remote_data_source_impl/update_opportunity_remote_data_source_impl.dart'
+    as _i342;
+import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/prayer_times_remote_data_source_impl/prayer_times_remote_data_source_impl.dart'
+    as _i298;
+import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/project_display_sections_remote_data_source_impl/project_display_sections_remote_data_source_impl.dart'
+    as _i1032;
 import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/projects/add_project_remote_data_source_impl/add_project_remote_data_source_impl.dart'
     as _i1047;
 import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/projects/delete_project_remote_data_source_impl/delete_project_remote_data_source_impl.dart'
@@ -68,6 +113,8 @@ import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote
     as _i570;
 import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/projects/update_project_remote_data_source_impl/update_project_remote_data_source_impl.dart'
     as _i394;
+import '../../features/home/presentation/tabs/home/data/repos_impl/app_links_repo_impl/app_links_repo_impl.dart'
+    as _i21;
 import '../../features/home/presentation/tabs/home/data/repos_impl/banners_repos_impl/banners_repos_impl.dart'
     as _i203;
 import '../../features/home/presentation/tabs/home/data/repos_impl/category_repos_impl/category_repos_impl.dart'
@@ -84,18 +131,32 @@ import '../../features/home/presentation/tabs/home/data/repos_impl/job/get_all_o
     as _i134;
 import '../../features/home/presentation/tabs/home/data/repos_impl/job/get_job_by_id_repo_impl/get_job_by_id_repo_impl.dart'
     as _i93;
+import '../../features/home/presentation/tabs/home/data/repos_impl/job/update_job_repo_impl/update_job_repo_impl.dart'
+    as _i952;
+import '../../features/home/presentation/tabs/home/data/repos_impl/job/update_opportunity_repo_impl/update_opportunity_repo_impl.dart'
+    as _i1028;
+import '../../features/home/presentation/tabs/home/data/repos_impl/prayer_times_repository_impl/prayer_times_repository_impl.dart'
+    as _i444;
+import '../../features/home/presentation/tabs/home/data/repos_impl/project_display_sections_repository_impl/project_display_sections_repository_impl.dart'
+    as _i968;
 import '../../features/home/presentation/tabs/home/data/repos_impl/projects/add_project_repository_impl/add_project_repository_impl.dart'
     as _i63;
 import '../../features/home/presentation/tabs/home/data/repos_impl/projects/delete_project_repository_impl/delete_project_repository_impl.dart'
     as _i687;
 import '../../features/home/presentation/tabs/home/data/repos_impl/projects/get_all_projects_repository_impl/get_all_projects_repository_impl.dart'
     as _i528;
+import '../../features/home/presentation/tabs/home/data/repos_impl/projects/get_newest_projects_repository_impl/get_newest_projects_repository.dart'
+    as _i766;
 import '../../features/home/presentation/tabs/home/data/repos_impl/projects/get_project_details_repository_impl/get_project_details_repository_impl.dart'
     as _i80;
 import '../../features/home/presentation/tabs/home/data/repos_impl/projects/get_projects_by_category_repository_impl/get_projects_by_category_repository_impl.dart'
     as _i61;
+import '../../features/home/presentation/tabs/home/data/repos_impl/projects/get_projects_by_display_section_repository_impl/get_projects_by_display_section_repository_impl.dart'
+    as _i100;
 import '../../features/home/presentation/tabs/home/data/repos_impl/projects/update_project_repository_impl/update_project_repository_impl.dart'
     as _i1018;
+import '../../features/home/presentation/tabs/home/domain/repos/app_links_repo/app_links_repo.dart'
+    as _i978;
 import '../../features/home/presentation/tabs/home/domain/repos/banner_repository/banner_repository.dart'
     as _i572;
 import '../../features/home/presentation/tabs/home/domain/repos/category_repos/category_repos.dart'
@@ -112,18 +173,32 @@ import '../../features/home/presentation/tabs/home/domain/repos/job/get_all_oppo
     as _i272;
 import '../../features/home/presentation/tabs/home/domain/repos/job/get_job_by_id_repo/get_job_by_id_repo.dart'
     as _i108;
+import '../../features/home/presentation/tabs/home/domain/repos/job/update_job_repo/update_job_repo.dart'
+    as _i38;
+import '../../features/home/presentation/tabs/home/domain/repos/job/update_opportunity_repo/update_opportunity_repo.dart'
+    as _i381;
+import '../../features/home/presentation/tabs/home/domain/repos/prayer_times_repository/prayer_times_repository.dart'
+    as _i118;
+import '../../features/home/presentation/tabs/home/domain/repos/project_display_sections_repository/project_display_sections_repository.dart'
+    as _i377;
 import '../../features/home/presentation/tabs/home/domain/repos/projects/add_project_repository/add_project_repository.dart'
     as _i45;
 import '../../features/home/presentation/tabs/home/domain/repos/projects/delete_project_repository/delete_project_repository.dart'
     as _i822;
 import '../../features/home/presentation/tabs/home/domain/repos/projects/get_all_projects_repository/get_all_projects_repository.dart'
     as _i925;
+import '../../features/home/presentation/tabs/home/domain/repos/projects/get_newest_projects_repository/get_newest_projects_repository.dart'
+    as _i977;
 import '../../features/home/presentation/tabs/home/domain/repos/projects/get_project_details_repository/get_project_details_repository.dart'
     as _i184;
 import '../../features/home/presentation/tabs/home/domain/repos/projects/get_projects_by_category_repository/get_projects_by_category_repository.dart'
     as _i250;
+import '../../features/home/presentation/tabs/home/domain/repos/projects/get_projects_by_display_section_repository/get_projects_by_display_section_repository.dart'
+    as _i741;
 import '../../features/home/presentation/tabs/home/domain/repos/projects/update_project_repository/update_project_repository.dart'
     as _i943;
+import '../../features/home/presentation/tabs/home/domain/use_cases/app_links_usecase/app_links_usecase.dart'
+    as _i1018;
 import '../../features/home/presentation/tabs/home/domain/use_cases/banner_use_case/banner_use_case.dart'
     as _i369;
 import '../../features/home/presentation/tabs/home/domain/use_cases/category_use_case/category_use_case.dart'
@@ -140,16 +215,28 @@ import '../../features/home/presentation/tabs/home/domain/use_cases/jobs_use_cas
     as _i365;
 import '../../features/home/presentation/tabs/home/domain/use_cases/jobs_use_case/get_job_by_id_usecase/get_job_by_id_usecase.dart'
     as _i117;
+import '../../features/home/presentation/tabs/home/domain/use_cases/jobs_use_case/update_job_usecase/update_job_usecase.dart'
+    as _i376;
+import '../../features/home/presentation/tabs/home/domain/use_cases/jobs_use_case/update_opportunity_usecase/update_opportunity_usecase.dart'
+    as _i53;
+import '../../features/home/presentation/tabs/home/domain/use_cases/prayer_times_usecase/prayer_times_usecase.dart'
+    as _i308;
+import '../../features/home/presentation/tabs/home/domain/use_cases/project_display_sections_use_case/project_display_sections_use_case.dart'
+    as _i297;
 import '../../features/home/presentation/tabs/home/domain/use_cases/projects/add_project_usecase/add_project_usecase.dart'
     as _i180;
 import '../../features/home/presentation/tabs/home/domain/use_cases/projects/delete_project_usecase/delete_project_usecase.dart'
     as _i329;
 import '../../features/home/presentation/tabs/home/domain/use_cases/projects/get_all_projects_usecase/get_all_projects_usecase.dart'
     as _i508;
+import '../../features/home/presentation/tabs/home/domain/use_cases/projects/get_newest_projects_usecase/get_newest_projects_usecase.dart'
+    as _i667;
 import '../../features/home/presentation/tabs/home/domain/use_cases/projects/get_project_details_usecase/get_project_details_usecase.dart'
     as _i966;
 import '../../features/home/presentation/tabs/home/domain/use_cases/projects/get_projects_by_category_usecase/get_projects_by_category_usecase.dart'
     as _i654;
+import '../../features/home/presentation/tabs/home/domain/use_cases/projects/get_projects_by_display_section_use_case/get_projects_by_display_section_use_case.dart'
+    as _i1000;
 import '../../features/home/presentation/tabs/home/domain/use_cases/projects/update_project_usecase/update_project_usecase.dart'
     as _i645;
 import '../../features/home/presentation/tabs/home/presentation/manager/banners/get_banners_by_position_view_model/get_banners_by_position_view_model.dart'
@@ -164,6 +251,10 @@ import '../../features/home/presentation/tabs/home/presentation/manager/jobs/get
     as _i29;
 import '../../features/home/presentation/tabs/home/presentation/manager/jobs/get_all_opportunities_view_model/get_all_opportunities_view_model.dart'
     as _i1068;
+import '../../features/home/presentation/tabs/home/presentation/manager/jobs/update_job_view_model/update_job_view_model.dart'
+    as _i662;
+import '../../features/home/presentation/tabs/home/presentation/manager/jobs/update_opportunity_view_model/update_opportunity_view_model.dart'
+    as _i247;
 import '../../features/home/presentation/tabs/home/presentation/manager/projects/add_project_view_model/add_project_view_model.dart'
     as _i61;
 import '../../features/home/presentation/tabs/home/presentation/manager/projects/delete_project_view_model/delete_project_view_model.dart'
@@ -187,6 +278,24 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.factory<_i758.FirebaseService>(() => _i704.FirebaseServiceImpl());
+    gh.factory<_i79.ProjectDisplaySectionsRemoteDataSource>(
+      () => _i1032.ProjectDisplaySectionsRemoteDataSourceImpl(
+        firebaseService: gh<_i758.FirebaseService>(),
+      ),
+    );
+    gh.factory<_i564.PrayerTimesRemoteDataSource>(
+      () => _i298.PrayerTimesRemoteDataSourceImpl(gh<_i361.Dio>()),
+    );
+    gh.factory<_i636.DalelAlShamPlaceRemoteDataSource>(
+      () => _i813.DalelAlShamPlaceRemoteDataSourceImpl(
+        firebaseService: gh<_i758.FirebaseService>(),
+      ),
+    );
+    gh.factory<_i977.GetNewestProjectsRepository>(
+      () => _i766.GetNewestProjectsRepositoryImpl(
+        gh<_i157.GetNewestProjectsRemoteDataSource>(),
+      ),
+    );
     gh.factory<_i425.AddJobRemoteDataSource>(
       () => _i598.AddJobRemoteDataSourceImpl(gh<_i758.FirebaseService>()),
     );
@@ -196,6 +305,24 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i694.DeleteProjectRemoteDataSource>(
       () =>
           _i487.DeleteProjectRemoteDataSourceImpl(gh<_i758.FirebaseService>()),
+    );
+    gh.factory<_i912.GetProjectsByDisplaySectionRemoteDataSource>(
+      () => _i278.GetProjectsByDisplaySectionRemoteDataSourceImpl(
+        gh<_i758.FirebaseService>(),
+      ),
+    );
+    gh.factory<_i667.GetNewestProjectsUseCase>(
+      () => _i667.GetNewestProjectsUseCase(
+        gh<_i977.GetNewestProjectsRepository>(),
+      ),
+    );
+    gh.factory<_i296.UpdateOpportunityRemoteDataSource>(
+      () => _i342.UpdateOpportunityRemoteDataSourceImpl(
+        gh<_i758.FirebaseService>(),
+      ),
+    );
+    gh.factory<_i455.AppLinksRemoteDataSource>(
+      () => _i635.AppLinksRemoteDataSourceImpl(gh<_i758.FirebaseService>()),
     );
     gh.factory<_i585.AddOpportunityRemoteDataSource>(
       () =>
@@ -228,6 +355,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i804.GetAllProjectsRemoteDataSource>(
       () =>
           _i113.GetAllProjectsRemoteDataSourceImpl(gh<_i758.FirebaseService>()),
+    );
+    gh.factory<_i956.UpdateJobRemoteDataSource>(
+      () => _i842.UpdateJobRemoteDataSourceImpl(gh<_i758.FirebaseService>()),
+    );
+    gh.factory<_i377.ProjectDisplaySectionsRepository>(
+      () => _i968.ProjectDisplaySectionsRepositoryImpl(
+        gh<_i79.ProjectDisplaySectionsRemoteDataSource>(),
+      ),
     );
     gh.factory<_i168.GetProjectsByCategoryRemoteDataSource>(
       () => _i570.GetProjectsByCategoryRemoteDataSourceImpl(
@@ -266,8 +401,25 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i804.GetAllProjectsRemoteDataSource>(),
       ),
     );
+    gh.factory<_i978.AppLinksRepo>(
+      () => _i21.AppLinksRepoImpl(gh<_i455.AppLinksRemoteDataSource>()),
+    );
+    gh.factory<_i1018.AppLinksUseCase>(
+      () => _i1018.AppLinksUseCase(gh<_i978.AppLinksRepo>()),
+    );
+    gh.factory<_i130.DalelAlShamPlaceRepo>(
+      () => _i190.DalelAlShamPlaceRepoImpl(
+        dalelAlShamPlaceRemoteDataSource:
+            gh<_i636.DalelAlShamPlaceRemoteDataSource>(),
+      ),
+    );
     gh.factory<_i508.GetAllProjectsUseCase>(
       () => _i508.GetAllProjectsUseCase(gh<_i925.GetAllProjectsRepository>()),
+    );
+    gh.factory<_i741.GetProjectsByDisplaySectionRepository>(
+      () => _i100.GetProjectsByDisplaySectionRepositoryImpl(
+        gh<_i912.GetProjectsByDisplaySectionRemoteDataSource>(),
+      ),
     );
     gh.factory<_i180.AddProjectUseCase>(
       () => _i180.AddProjectUseCase(gh<_i45.AddProjectRepository>()),
@@ -278,8 +430,21 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i329.DeleteProjectUseCase>(
       () => _i329.DeleteProjectUseCase(gh<_i822.DeleteProjectRepository>()),
     );
+    gh.factory<_i38.UpdateJobRepo>(
+      () => _i952.UpdateJobRepoImpl(gh<_i956.UpdateJobRemoteDataSource>()),
+    );
     gh.factory<_i369.BannerUseCase>(
       () => _i369.BannerUseCase(gh<_i572.BannersRepository>()),
+    );
+    gh.factory<_i1000.GetProjectsByDisplaySectionUseCase>(
+      () => _i1000.GetProjectsByDisplaySectionUseCase(
+        gh<_i741.GetProjectsByDisplaySectionRepository>(),
+      ),
+    );
+    gh.factory<_i381.UpdateOpportunityRepo>(
+      () => _i1028.UpdateOpportunityRepoImpl(
+        gh<_i296.UpdateOpportunityRemoteDataSource>(),
+      ),
     );
     gh.factory<_i907.GetAllProjectsViewModel>(
       () => _i907.GetAllProjectsViewModel(gh<_i508.GetAllProjectsUseCase>()),
@@ -292,6 +457,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i61.AddNewServiceViewModel>(
       () => _i61.AddNewServiceViewModel(gh<_i180.AddProjectUseCase>()),
+    );
+    gh.factory<_i118.PrayerTimesRepository>(
+      () => _i444.PrayerTimesRepositoryImpl(
+        gh<_i564.PrayerTimesRemoteDataSource>(),
+      ),
     );
     gh.factory<_i943.DeleteProjectViewModel>(
       () => _i943.DeleteProjectViewModel(gh<_i329.DeleteProjectUseCase>()),
@@ -325,11 +495,30 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i168.GetProjectsByCategoryRemoteDataSource>(),
       ),
     );
+    gh.factory<_i297.ProjectDisplaySectionsUseCase>(
+      () => _i297.ProjectDisplaySectionsUseCase(
+        projectDisplaySectionsRepository:
+            gh<_i377.ProjectDisplaySectionsRepository>(),
+      ),
+    );
+    gh.factory<_i53.UpdateOpportunityUseCase>(
+      () => _i53.UpdateOpportunityUseCase(gh<_i381.UpdateOpportunityRepo>()),
+    );
+    gh.factory<_i340.DalelAlShamPlaceUseCase>(
+      () => _i340.DalelAlShamPlaceUseCase(
+        dalelAlShamPlaceRepo: gh<_i130.DalelAlShamPlaceRepo>(),
+      ),
+    );
     gh.factory<_i645.UpdateProjectUseCase>(
       () => _i645.UpdateProjectUseCase(gh<_i943.UpdateProjectRepository>()),
     );
     gh.factory<_i108.GetJobByIdRepo>(
       () => _i93.GetJobByIdRepoImpl(gh<_i104.GetJobByIdRemoteDataSource>()),
+    );
+    gh.factory<_i308.PrayerTimesUseCase>(
+      () => _i308.PrayerTimesUseCase(
+        prayerTimesRepository: gh<_i118.PrayerTimesRepository>(),
+      ),
     );
     gh.factory<_i966.GetProjectDetailsUsecase>(
       () => _i966.GetProjectDetailsUsecase(
@@ -345,6 +534,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i966.GetProjectDetailsUsecase>(),
       ),
     );
+    gh.factory<_i376.UpdateJobUsecase>(
+      () => _i376.UpdateJobUsecase(gh<_i38.UpdateJobRepo>()),
+    );
     gh.factory<_i117.GetJobByIdUsecase>(
       () => _i117.GetJobByIdUsecase(gh<_i108.GetJobByIdRepo>()),
     );
@@ -359,6 +551,26 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i250.GetProjectsByCategoryRepository>(),
       ),
     );
+    gh.factory<_i963.AddPlaceViewModel>(
+      () => _i963.AddPlaceViewModel(
+        dalelAlShamPlaceUseCase: gh<_i340.DalelAlShamPlaceUseCase>(),
+      ),
+    );
+    gh.factory<_i313.DeletePlaceViewModel>(
+      () => _i313.DeletePlaceViewModel(
+        dalelAlShamPlaceUseCase: gh<_i340.DalelAlShamPlaceUseCase>(),
+      ),
+    );
+    gh.factory<_i544.GetAllPlaceViewModel>(
+      () => _i544.GetAllPlaceViewModel(
+        dalelAlShamPlaceUseCase: gh<_i340.DalelAlShamPlaceUseCase>(),
+      ),
+    );
+    gh.factory<_i660.UpdatePlaceViewModel>(
+      () => _i660.UpdatePlaceViewModel(
+        dalelAlShamPlaceUseCase: gh<_i340.DalelAlShamPlaceUseCase>(),
+      ),
+    );
     gh.factory<_i696.GetProjectsByCategoryViewModel>(
       () => _i696.GetProjectsByCategoryViewModel(
         gh<_i654.GetProjectsByCategoryUseCase>(),
@@ -367,11 +579,18 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i111.DeleteJobUsecase>(
       () => _i111.DeleteJobUsecase(gh<_i686.DeleteJobRepo>()),
     );
+    gh.factory<_i247.UpdateOpportunityViewModel>(
+      () =>
+          _i247.UpdateOpportunityViewModel(gh<_i53.UpdateOpportunityUseCase>()),
+    );
     gh.factory<_i623.GetAllCategoriesViewModel>(
       () => _i623.GetAllCategoriesViewModel(gh<_i886.CategoryUseCase>()),
     );
     gh.factory<_i29.GetAllJobsViewModel>(
       () => _i29.GetAllJobsViewModel(gh<_i772.GetAllJobsUsecase>()),
+    );
+    gh.factory<_i662.UpdateJobViewModel>(
+      () => _i662.UpdateJobViewModel(gh<_i376.UpdateJobUsecase>()),
     );
     gh.factory<_i439.UpdateProjectViewModel>(
       () => _i439.UpdateProjectViewModel(gh<_i645.UpdateProjectUseCase>()),

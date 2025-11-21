@@ -51,7 +51,7 @@ class DalelElshamDashboard extends StatelessWidget {
             ],
 
             onGenerateRoute: RoutesManager.onGenerateRoute,
-            initialRoute: RoutesManager.jobOpportunitiesManagement
+            initialRoute: RoutesManager.home
             ,
           ),
         );

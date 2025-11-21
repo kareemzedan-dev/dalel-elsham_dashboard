@@ -5,10 +5,16 @@ class ActionButtonsSection extends StatelessWidget {
   final VoidCallback onApprove;
   final VoidCallback onReject;
 
+  /// النصوص المرسلة من الخارج
+  final String approveText;
+  final String rejectText;
+
   const ActionButtonsSection({
     Key? key,
     required this.onApprove,
     required this.onReject,
+    this.approveText = "موافقة ونشر الإعلان",
+    this.rejectText = "رفض / إلغاء الموافقة",
   }) : super(key: key);
 
   @override
@@ -29,7 +35,7 @@ class ActionButtonsSection extends StatelessWidget {
               ),
               onPressed: onApprove,
               child: Text(
-                "موافقة ونشر الإعلان",
+                approveText,
                 style: TextStyle(fontSize: 15.sp, color: Colors.white),
               ),
             ),
@@ -46,7 +52,7 @@ class ActionButtonsSection extends StatelessWidget {
               ),
               onPressed: onReject,
               child: Text(
-                "رفض / إلغاء الموافقة",
+                rejectText,
                 style: TextStyle(fontSize: 15.sp, color: Colors.white),
               ),
             ),
