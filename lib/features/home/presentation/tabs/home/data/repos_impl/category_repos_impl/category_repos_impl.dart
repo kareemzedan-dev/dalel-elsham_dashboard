@@ -15,4 +15,16 @@ class CategoryReposImpl implements CategoryRepos{
   Future<Either<Failures, List<CategoryEntity>>> getAllCategories() {
     return categoryRemoteDataSource.getAllCategories();
   }
+  @override
+  Future<Either<Failures, void>> addCategory(CategoryEntity category) {
+    return categoryRemoteDataSource.addCategory(category);
+  }
+  @override
+  Future<Either<Failures, void>> updateCategory(CategoryEntity category) {
+    return categoryRemoteDataSource.updateCategory(category);
+  }
+  @override
+  Future<Either<Failures, void>> deleteCategory(String categoryId) {
+    return categoryRemoteDataSource.deleteCategory(categoryId);
+  }
 }

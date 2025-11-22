@@ -14,6 +14,7 @@ import '../../features/home/presentation/tabs/home/presentation/views/admin_proj
 import '../../features/home/presentation/tabs/home/presentation/views/categories_details_view.dart';
 import '../../features/home/presentation/tabs/home/presentation/views/job_offer_form_view.dart';
 import '../../features/home/presentation/tabs/home/presentation/views/job_request_form_view.dart';
+import '../../features/home/presentation/tabs/home/presentation/views/links_management_view.dart';
 import '../../features/home/presentation/tabs/home/presentation/views/new_projects_view.dart';
 import '../../features/home/presentation/tabs/home/presentation/views/prayer_times_view.dart';
 import '../../features/home/presentation/tabs/home/presentation/views/project_details_view.dart';
@@ -38,6 +39,7 @@ class RoutesManager {
   static const String jobOpportunitiesManagement = "jobOpportunitiesManagement";
   static const String adminJobRequestDetails = "adminJobRequestDetails";
   static const String bannersManagement = "bannersManagement";
+  static const String linksManagement = "linksManagement";
 
   static Route onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -46,9 +48,15 @@ class RoutesManager {
       case home:
         return MaterialPageRoute(builder: (_) => const HomeView());
       case categoriesDetails:
-        return MaterialPageRoute(builder: (_) => const CategoriesDetailsView());
+        final args = settings.arguments as Map<String, dynamic>;
+
+        return MaterialPageRoute(
+          builder: (_) => CategoriesDetailsView(categoryId: args['categoryId'] ,categoryName: args['categoryName']),
+        );
       case projectDetails:
-        return MaterialPageRoute(builder: (_) => const ProjectDetailsView());
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(builder: (_) =>   ProjectDetailsView(projectId: args['projectId'],
+        ));
       case dalelElsham:
         return MaterialPageRoute(builder: (_) => const DalelElshamTabView());
       case jobOpportunities:
@@ -99,6 +107,8 @@ class RoutesManager {
         );
       case bannersManagement:
         return MaterialPageRoute(builder: (_) => const BannersManagementView());
+        case linksManagement:
+        return MaterialPageRoute(builder: (_) => const LinksManagementView());
 
       default:
         return MaterialPageRoute(builder: (_) => const Placeholder());

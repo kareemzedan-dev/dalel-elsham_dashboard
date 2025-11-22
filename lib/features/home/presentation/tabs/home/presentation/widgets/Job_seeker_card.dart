@@ -1,24 +1,16 @@
 import 'package:dlyl_alsham_dashboard/core/utils/colors_manager.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/domain/entities/job_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../../core/components/contact_button_card.dart';
+import '../../../../../../../core/services/phone_call_service.dart';
 import '../../../../../../../core/utils/assets_manager.dart';
+import 'package:intl/intl.dart';
 
 class JobSeekerCard extends StatelessWidget {
-  final String name;
-  final String description;
-  final String location;
-  final String date;
-  final String imagePath;
+  final JobEntity job;
 
-  const JobSeekerCard({
-    super.key,
-    required this.name,
-    required this.description,
-    required this.location,
-    required this.date,
-    required this.imagePath,
-  });
+  const JobSeekerCard({super.key, required this.job});
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +28,19 @@ class JobSeekerCard extends StatelessWidget {
           border: Border.all(color: Colors.grey.shade300, width: 1.5.w),
         ),
         padding: EdgeInsets.all(12.w),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
           children: [
-            Expanded(
-              child: _buildUserInfo(context),
-            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: _buildUserInfo(context)),
 
-            _buildAvatarAndContact(),
+                _buildAvatarAndContact(),
+
+              ],
+            ),
+            SizedBox(height: 8.h),
+            _buildLocationAndDate(context),
           ],
         ),
       ),
@@ -55,7 +52,7 @@ class JobSeekerCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          name,
+          job.title,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.w700,
             height: 1.6,
@@ -64,7 +61,7 @@ class JobSeekerCard extends StatelessWidget {
         ),
         SizedBox(height: 4.h),
         Text(
-          description,
+          job.description,
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -73,41 +70,57 @@ class JobSeekerCard extends StatelessWidget {
             fontSize: 14.sp,
           ),
         ),
-        SizedBox(height: 8.h),
-        _buildLocationAndDate(context),
+
       ],
     );
   }
 
-  /// 📍 الموقع والتاريخ
   Widget _buildLocationAndDate(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(Icons.location_on_outlined,
-            size: 16.sp, color: ColorsManager.primaryColor),
+        Icon(
+          Icons.location_on_outlined,
+          size: 16.sp,
+          color: ColorsManager.primaryColor,
+        ),
         SizedBox(width: 4.w),
-        Text(
-          location,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.w500,
-            fontSize: 14.sp,
+        Flexible(
+          child: Text(
+            job.location,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w500,
+              fontSize: 14.sp,
+            ),
           ),
         ),
-        SizedBox(width: 30.w),
-        Icon(Icons.access_time_rounded,
-            size: 16.sp, color: ColorsManager.primaryColor),
+
+        SizedBox(width: 12.w),
+
+        Icon(
+          Icons.access_time_rounded,
+          size: 16.sp,
+          color: ColorsManager.primaryColor,
+        ),
         SizedBox(width: 4.w),
-        Text(
-          date,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.w500,
-            fontSize: 14.sp,
+
+        Flexible(
+          child: Text(
+            DateFormat('yyyy-MM-dd').format(job.createdAt),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w500,
+              fontSize: 14.sp,
+            ),
           ),
         ),
       ],
     );
   }
+
 
   Widget _buildAvatarAndContact() {
     return Column(
@@ -119,15 +132,16 @@ class JobSeekerCard extends StatelessWidget {
           ),
           child: Padding(
             padding: EdgeInsets.all(8.w),
-            child: Image.asset(
-              imagePath,
-              height: 50.h,
-              width: 50.w,
-            ),
+            child: Image.asset(AssetsManager.person, height: 50.h, width: 50.w),
           ),
         ),
         SizedBox(height: 8.h),
-        ContactButtonCard(image: AssetsManager.phoneCall),
+        ContactButtonCard(
+          image: AssetsManager.phoneCall,
+          onTap: () {
+            PhoneCallService.callNumber(job.phone);
+          },
+        ),
       ],
     );
   }

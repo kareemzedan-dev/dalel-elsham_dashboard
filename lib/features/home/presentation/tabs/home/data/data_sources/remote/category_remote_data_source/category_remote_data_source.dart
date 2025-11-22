@@ -6,4 +6,7 @@ import '../../../../domain/entities/category_entity.dart';
 abstract class CategoryRemoteDataSource {
 
   Future<Either<Failures, List<CategoryEntity>>> getAllCategories();
+  Future<Either<Failures, void>> addCategory(CategoryEntity category);
+  Future<Either<Failures, void>> updateCategory(CategoryEntity category);
+  Future<Either<Failures, void>> deleteCategory(String categoryId);
 }

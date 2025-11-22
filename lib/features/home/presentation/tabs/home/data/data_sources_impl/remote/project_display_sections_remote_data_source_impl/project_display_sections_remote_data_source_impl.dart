@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dlyl_alsham_dashboard/core/errors/failures.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/domain/entities/project_display_section_entity.dart';
 import 'package:dart_either/dart_either.dart';
@@ -126,4 +127,31 @@ class ProjectDisplaySectionsRemoteDataSourceImpl
       return Left(ServerFailure("فشل تحديث القسم: $e"));
     }
   }
+
+  @override
+  Future<Either<Failures, void>> addProjectToSection(
+      String projectId,
+      String sectionId,
+      ) async {
+    try {
+      if (!await NetworkValidation.hasInternet()) {
+        return Left(NetworkFailure("لا يوجد اتصال بالإنترنت"));
+      }
+
+      /// تحديث مشروع معين داخل كوليكشن المشاريع
+      await firebaseService.updateDocument(
+        collection: "projects",
+        docId: projectId,
+        data: {
+          "displaySections": FieldValue.arrayUnion([sectionId]),
+        },
+      );
+
+      return const Right(null);
+
+    } catch (e) {
+      return Left(ServerFailure("فشل إضافة المشروع إلى القسم: $e"));
+    }
+  }
+
 }

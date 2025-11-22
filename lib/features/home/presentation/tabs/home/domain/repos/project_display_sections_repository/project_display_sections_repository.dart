@@ -7,12 +7,17 @@ abstract class ProjectDisplaySectionsRepository {
   getAllProjectDisplaySections();
 
   Future<Either<Failures, void>> addProjectDisplaySection(
-      ProjectDisplaySectionEntity projectDisplaySectionEntity,
-      );
+    ProjectDisplaySectionEntity projectDisplaySectionEntity,
+  );
 
   Future<Either<Failures, void>> updateProjectDisplaySection(
-      ProjectDisplaySectionEntity projectDisplaySectionEntity,
-      );
+    ProjectDisplaySectionEntity projectDisplaySectionEntity,
+  );
 
   Future<Either<Failures, void>> deleteProjectDisplaySection(String id);
+
+  Future<Either<Failures, void>> addProjectToSection(
+    String projectId,
+    String sectionId,
+  );
 }

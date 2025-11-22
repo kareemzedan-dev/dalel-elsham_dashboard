@@ -89,30 +89,28 @@ class _BannerSectionState extends State<BannerSection> {
               ),
             ),
 
-            /// ---------------- زر الحذف ----------------
-            Positioned(
-              top: 12,
-              right: 12,
-              child: InkWell(
-                onTap: () {
-                  if (widget.onDelete != null) {
-                    widget.onDelete!(banner.id); // ← إرسال ID
-                  }
-                },
-                child: Container(
-                  padding: EdgeInsets.all(6.w),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.8),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                    size: 20.sp,
+            /// ---------------- زر الحذف (يظهر فقط لو onDelete != null) ----------------
+            if (widget.onDelete != null)
+              Positioned(
+                top: 12,
+                right: 12,
+                child: InkWell(
+                  onTap: () => widget.onDelete!(banner.id),
+                  child: Container(
+                    padding: EdgeInsets.all(6.w),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.8),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                      size: 20.sp,
+                    ),
                   ),
                 ),
               ),
-            ),
+
           ],
         );
       },

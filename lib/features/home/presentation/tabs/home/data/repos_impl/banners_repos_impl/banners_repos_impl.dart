@@ -7,15 +7,27 @@ import 'package:injectable/injectable.dart';
 
 import '../../../domain/repos/banner_repository/banner_repository.dart';
 import '../../data_sources/remote/banner_remote_data_source/banners_remote_data_source.dart';
+
 @Injectable(as: BannersRepository)
 class BannersReposImpl implements BannersRepository {
   final BannersRemoteDataSource bannersRemoteDataSource;
+
   BannersReposImpl(this.bannersRemoteDataSource);
 
   @override
-  Future<Either<Failures, List<BannerEntity>>> getBannersByPosition(String position) {
+  Future<Either<Failures, List<BannerEntity>>> getBannersByPosition(
+    String position,
+  ) {
     return bannersRemoteDataSource.getBannersByPosition(position);
   }
 
+  @override
+  Future<Either<Failures, void>> addBanner(BannerEntity banner) {
+    return bannersRemoteDataSource.addBanner(banner);
+  }
 
+  @override
+  Future<Either<Failures, void>> deleteBanner(String id) {
+    return bannersRemoteDataSource.deleteBanner(id);
+  }
 }

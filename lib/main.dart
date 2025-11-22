@@ -9,19 +9,34 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/cache/shared_preferences.dart';
 import 'core/di/di.dart' as di;
 import 'firebase_options.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'features/home/presentation/tabs/home/presentation/manager/categories/delete_category_view_model/delete_category_view_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Supabase.initialize(
     url: 'https://rfxticljudaqokliiugx.supabase.co',
     anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJmeHRpY2xqdWRhcW9rbGlpdWd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMzEyNjksImV4cCI6MjA3ODgwNzI2OX0.jUBgrAsz19r7YrEvkwxv4yD3fKBo-1yUwUUDw32SgNU',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJmeHRpY2xqdWRhcW9rbGlpdWd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMzEyNjksImV4cCI6MjA3ODgwNzI2OX0.jUBgrAsz19r7YrEvkwxv4yD3fKBo-1yUwUUDw32SgNU',
   );
+
   await di.configureDependencies();
   await SharedPrefHelper.init();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const DalelElshamDashboard());
+
+  runApp(
+    /// --------------- إضافة الـ Provider هنا فوق التطبيق كله ----------------
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => di.getIt<DeleteCategoryViewModel>(),
+        ),
+      ],
+      child: const DalelElshamDashboard(),
+    ),
+  );
 }
 
 class DalelElshamDashboard extends StatelessWidget {
@@ -33,7 +48,7 @@ class DalelElshamDashboard extends StatelessWidget {
       designSize: const Size(390, 844),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (context, child) {
+      builder: (_, __) {
         return Directionality(
           textDirection: TextDirection.rtl,
           child: MaterialApp(
@@ -51,8 +66,7 @@ class DalelElshamDashboard extends StatelessWidget {
             ],
 
             onGenerateRoute: RoutesManager.onGenerateRoute,
-            initialRoute: RoutesManager.home
-            ,
+            initialRoute: RoutesManager.splash,
           ),
         );
       },

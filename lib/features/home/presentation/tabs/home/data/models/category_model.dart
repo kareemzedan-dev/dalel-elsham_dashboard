@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../domain/entities/category_entity.dart';
 
 class CategoryModel extends CategoryEntity {
@@ -12,6 +11,9 @@ class CategoryModel extends CategoryEntity {
     required super.createdAt,
   });
 
+  // -----------------------------
+  // 🔥 From Firestore Document
+  // -----------------------------
   factory CategoryModel.fromMap(Map<String, dynamic> map, String docId) {
     return CategoryModel(
       id: docId,
@@ -23,13 +25,30 @@ class CategoryModel extends CategoryEntity {
     );
   }
 
+  // -----------------------------
+  // 🔥 From Entity → Model
+  // -----------------------------
+  factory CategoryModel.fromEntity(CategoryEntity entity) {
+    return CategoryModel(
+      id: entity.id,
+      name: entity.name,
+      imageUrl: entity.imageUrl,
+      order: entity.order,
+      isActive: entity.isActive,
+      createdAt: entity.createdAt,
+    );
+  }
+
+  // -----------------------------
+  // 🔥 To Firestore Map
+  // -----------------------------
   Map<String, dynamic> toMap() {
     return {
       "name": name,
       "imageUrl": imageUrl,
       "order": order,
       "isActive": isActive,
-      "createdAt": createdAt,
+      "createdAt": Timestamp.fromDate(createdAt),
     };
   }
 }

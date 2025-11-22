@@ -1,7 +1,7 @@
 class AssetsManager {
 
   static const String baseUrl = 'assets/images';
-  static const String logo  = '$baseUrl/logo.png';
+  static const String logo  = '$baseUrl/app_icon.png';
   static const String banner = '$baseUrl/banner.jpg';
   static const String banner2 = '$baseUrl/banner2.jpg';
   static const String category1 = '$baseUrl/food.jpg';
@@ -30,5 +30,8 @@ class AssetsManager {
     static const String onboarding4 = '$baseUrl/onboarding4.png';
     static const String loginImage = '$baseUrl/login_image.jpg';
     static const String uploadImage = '$baseUrl/image_upload.png';
+
+  static const String addNewServiceImage = '$baseUrl/image.png';
+
 
 }

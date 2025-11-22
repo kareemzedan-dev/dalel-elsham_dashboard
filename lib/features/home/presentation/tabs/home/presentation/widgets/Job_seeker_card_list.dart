@@ -1,51 +1,44 @@
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/banners/get_banners_by_position_view_model/get_banners_by_position_view_model.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/banners/get_banners_by_position_view_model/get_banners_by_position_view_model_states.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../../../../core/di/di.dart';
 import '../../../../../../../core/utils/assets_manager.dart';
 import '../../../dalel_elsham/presentation/widgets/sponsored_banner.dart';
+import '../../domain/entities/job_entity.dart';
 import 'Job_seeker_card.dart';
+import 'banner_every5.dart';
+import 'banner_section.dart';
 
 class JobSeekerCardList extends StatelessWidget {
-  const JobSeekerCardList({super.key});
+  const JobSeekerCardList({
+    super.key,
+    required this.jobs,
+    required this.position,
+  });
+
+  final List<JobEntity> jobs;
+  final String position;
 
   @override
   Widget build(BuildContext context) {
-    // عدد العناصر الأساسية (الكروت)
-    const int itemCount = 10;
-
     return ListView.builder(
-      scrollDirection: Axis.vertical,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: itemCount + 1,
+      itemCount: jobs.length,
       itemBuilder: (context, index) {
-        // ✅ أول عنصر بانر
-        if (index == 0) {
-          return Column(
-            children: [
-              SponsoredBanner(image: AssetsManager.banner),
-              SizedBox(height: 16.h),
-            ],
-          );
-        }
-
-        // ✅ الكارت الحالي
-        final cardIndex = index - 1;
-        final bool showBanner = (cardIndex + 1) % 5 == 0;
-
         return Column(
           children: [
-            const JobSeekerCard(
-              name: "محمد القاسم",
-              description:
-              "ابحث عن عمل كمصمم جرافيك، لدي خبرة 4 سنوات في تصميم الشعارات والإعلانات.",
-              location: "دمشق",
-              date: "12/11/2025",
-              imagePath: AssetsManager.person,
-            ),
-            if (showBanner) ...[
+            JobSeekerCard(job: jobs[index]),
+
+            /// ⭐ بانر كل 5 عناصر
+            if ((index + 1) % 5 == 0) ...[
               SizedBox(height: 16.h),
-              SponsoredBanner(image: AssetsManager.banner),
+              BannerEvery5(position: position),
             ],
+
             SizedBox(height: 16.h),
           ],
         );

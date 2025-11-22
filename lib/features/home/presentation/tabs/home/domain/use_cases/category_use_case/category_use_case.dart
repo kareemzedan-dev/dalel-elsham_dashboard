@@ -13,4 +13,13 @@ class CategoryUseCase {
   Future<Either<Failures, List<CategoryEntity>>> getAllCategories() {
     return categoryRepos.getAllCategories();
   }
+  Future<Either<Failures, void>> addCategory(CategoryEntity category) {
+    return categoryRepos.addCategory(category);
+  }
+  Future<Either<Failures, void>> updateCategory(CategoryEntity category) {
+    return categoryRepos.updateCategory(category);
+  }
+  Future<Either<Failures, void>> deleteCategory(String categoryId) {
+    return categoryRepos.deleteCategory(categoryId);
+  }
 }

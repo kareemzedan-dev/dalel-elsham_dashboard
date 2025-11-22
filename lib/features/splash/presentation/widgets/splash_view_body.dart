@@ -32,6 +32,7 @@ class _SplashViewBodyState extends State<SplashViewBody> {
          AssetsManager.logo,
           height: 200.h,
           width: 200.w,
+          fit: BoxFit.cover,
         ),
       ),
     );

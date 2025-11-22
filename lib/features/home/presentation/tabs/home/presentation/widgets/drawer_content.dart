@@ -67,29 +67,17 @@ class DrawerContent extends StatelessWidget {
               ),
 
               DrawerItem(
-                icon: Icons.report,
-                title: 'البلاغات والشكاوى',
+                icon: Icons.people_alt,
+                title: 'إدارة الروابط',
                 onTap: () {
-                  //   Navigator.pushNamed(context, Routes.reportsScreen);
+                  Navigator.pushNamed(context, RoutesManager.linksManagement);
                 },
               ),
 
-              DrawerItem(
-                icon: Icons.settings,
-                title: 'الإعدادات',
-                onTap: () {
-                  //Navigator.pushNamed(context, Routes.settingsScreen);
-                },
-              ),
             ],
           ),
         ),
 
-        LogoutButton(
-          onTap: () {
-            // عملية تسجيل الخروج
-          },
-        ),
 
         SizedBox(height: 16.h),
       ],

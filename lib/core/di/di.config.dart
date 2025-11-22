@@ -65,6 +65,8 @@ import '../../features/home/presentation/tabs/home/data/data_sources/remote/proj
     as _i804;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/projects/get_newest_projects_remote_data_source/get_newest_projects_remote_data_source.dart'
     as _i157;
+import '../../features/home/presentation/tabs/home/data/data_sources/remote/projects/get_pending_projects_remote_data_source/get_pending_projects_remote_data_source.dart'
+    as _i725;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/projects/get_project_details_remote_data_source/get_project_details_remote_data_source.dart'
     as _i131;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/projects/get_projects_by_category_remote_data_source/get_projects_by_category_remote_data_source.dart'
@@ -107,6 +109,10 @@ import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote
     as _i487;
 import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/projects/get_all_projects_remote_data_source_impl/get_all_projects_remote_data_source_impl.dart'
     as _i113;
+import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/projects/get_newest_projects_remote_data_source_impl/get_newest_projects_remote_data_source_impl.dart'
+    as _i64;
+import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/projects/get_pending_projects_remote_data_source_impl/get_pending_projects_remote_data_source_impl.dart'
+    as _i878;
 import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/projects/get_project_details_remote_data_source_impl/get_project_details_remote_data_source_impl.dart'
     as _i379;
 import '../../features/home/presentation/tabs/home/data/data_sources_impl/remote/projects/get_projects_by_category_remote_data_source_impl/get_projects_by_category_remote_data_source_impl.dart'
@@ -147,6 +153,8 @@ import '../../features/home/presentation/tabs/home/data/repos_impl/projects/get_
     as _i528;
 import '../../features/home/presentation/tabs/home/data/repos_impl/projects/get_newest_projects_repository_impl/get_newest_projects_repository.dart'
     as _i766;
+import '../../features/home/presentation/tabs/home/data/repos_impl/projects/get_pending_projects_repository_impl/get_pending_projects_repository_impl.dart'
+    as _i500;
 import '../../features/home/presentation/tabs/home/data/repos_impl/projects/get_project_details_repository_impl/get_project_details_repository_impl.dart'
     as _i80;
 import '../../features/home/presentation/tabs/home/data/repos_impl/projects/get_projects_by_category_repository_impl/get_projects_by_category_repository_impl.dart'
@@ -189,6 +197,8 @@ import '../../features/home/presentation/tabs/home/domain/repos/projects/get_all
     as _i925;
 import '../../features/home/presentation/tabs/home/domain/repos/projects/get_newest_projects_repository/get_newest_projects_repository.dart'
     as _i977;
+import '../../features/home/presentation/tabs/home/domain/repos/projects/get_pending_projects_repository/get_pending_projects_repository.dart'
+    as _i457;
 import '../../features/home/presentation/tabs/home/domain/repos/projects/get_project_details_repository/get_project_details_repository.dart'
     as _i184;
 import '../../features/home/presentation/tabs/home/domain/repos/projects/get_projects_by_category_repository/get_projects_by_category_repository.dart'
@@ -231,6 +241,8 @@ import '../../features/home/presentation/tabs/home/domain/use_cases/projects/get
     as _i508;
 import '../../features/home/presentation/tabs/home/domain/use_cases/projects/get_newest_projects_usecase/get_newest_projects_usecase.dart'
     as _i667;
+import '../../features/home/presentation/tabs/home/domain/use_cases/projects/get_pending_projects_usecase/get_pending_projects_usecase.dart'
+    as _i176;
 import '../../features/home/presentation/tabs/home/domain/use_cases/projects/get_project_details_usecase/get_project_details_usecase.dart'
     as _i966;
 import '../../features/home/presentation/tabs/home/domain/use_cases/projects/get_projects_by_category_usecase/get_projects_by_category_usecase.dart'
@@ -239,10 +251,24 @@ import '../../features/home/presentation/tabs/home/domain/use_cases/projects/get
     as _i1000;
 import '../../features/home/presentation/tabs/home/domain/use_cases/projects/update_project_usecase/update_project_usecase.dart'
     as _i645;
+import '../../features/home/presentation/tabs/home/presentation/manager/app_links/add_or_update_link_view_model/add_or_update_link_view_model.dart'
+    as _i529;
+import '../../features/home/presentation/tabs/home/presentation/manager/app_links/get_all_app_links_view_model/get_all_app_links_view_model.dart'
+    as _i730;
+import '../../features/home/presentation/tabs/home/presentation/manager/banners/add_banner_view_model/add_banner_view_model.dart'
+    as _i835;
+import '../../features/home/presentation/tabs/home/presentation/manager/banners/delete_banner_view_model/delete_banner_view_model.dart'
+    as _i612;
 import '../../features/home/presentation/tabs/home/presentation/manager/banners/get_banners_by_position_view_model/get_banners_by_position_view_model.dart'
     as _i76;
+import '../../features/home/presentation/tabs/home/presentation/manager/categories/add_category_view_model/add_category_view_model.dart'
+    as _i851;
+import '../../features/home/presentation/tabs/home/presentation/manager/categories/delete_category_view_model/delete_category_view_model.dart'
+    as _i316;
 import '../../features/home/presentation/tabs/home/presentation/manager/categories/get_all_categories_view_model/get_all_categories_view_model.dart'
     as _i623;
+import '../../features/home/presentation/tabs/home/presentation/manager/categories/update_category_view_model/update_category_view_model.dart'
+    as _i287;
 import '../../features/home/presentation/tabs/home/presentation/manager/jobs/add_job_view_model/add_job_view_model.dart'
     as _i640;
 import '../../features/home/presentation/tabs/home/presentation/manager/jobs/add_opportunity_view_model/add_opportunity_view_model.dart'
@@ -255,18 +281,37 @@ import '../../features/home/presentation/tabs/home/presentation/manager/jobs/upd
     as _i662;
 import '../../features/home/presentation/tabs/home/presentation/manager/jobs/update_opportunity_view_model/update_opportunity_view_model.dart'
     as _i247;
+import '../../features/home/presentation/tabs/home/presentation/manager/prayer_times_view_model/prayer_times_view_model.dart'
+    as _i409;
+import '../../features/home/presentation/tabs/home/presentation/manager/project_display_section_view_model/add_project_display_section_view_model/add_project_display_section_view_model.dart'
+    as _i11;
+import '../../features/home/presentation/tabs/home/presentation/manager/project_display_section_view_model/add_project_to_section_view_model/add_project_to_section_view_model.dart'
+    as _i648;
+import '../../features/home/presentation/tabs/home/presentation/manager/project_display_section_view_model/delete_project_display_section_view_model/delete_project_display_section_view_model.dart'
+    as _i745;
+import '../../features/home/presentation/tabs/home/presentation/manager/project_display_section_view_model/get_all_project_display_sections_view_model/get_all_project_display_sections_view_model.dart'
+    as _i593;
+import '../../features/home/presentation/tabs/home/presentation/manager/project_display_section_view_model/update_project_display_section_view_model/update_project_display_section_view_model.dart'
+    as _i151;
 import '../../features/home/presentation/tabs/home/presentation/manager/projects/add_project_view_model/add_project_view_model.dart'
     as _i61;
 import '../../features/home/presentation/tabs/home/presentation/manager/projects/delete_project_view_model/delete_project_view_model.dart'
     as _i943;
 import '../../features/home/presentation/tabs/home/presentation/manager/projects/get_all_projects_view_model/get_all_projects_view_model.dart'
     as _i907;
+import '../../features/home/presentation/tabs/home/presentation/manager/projects/get_newest_projects_view_model/get_newest_projects_view_model.dart'
+    as _i856;
+import '../../features/home/presentation/tabs/home/presentation/manager/projects/get_pending_projects_view_model/get_pending_projects_view_model.dart'
+    as _i895;
 import '../../features/home/presentation/tabs/home/presentation/manager/projects/get_project_details_view_model/get_project_details_view_model.dart'
     as _i616;
 import '../../features/home/presentation/tabs/home/presentation/manager/projects/get_projects_by_category_view_model/get_projects_by_category_view_model.dart'
     as _i696;
+import '../../features/home/presentation/tabs/home/presentation/manager/projects/get_projects_by_display_section_view_model/get_projects_by_display_section_view_model.dart'
+    as _i382;
 import '../../features/home/presentation/tabs/home/presentation/manager/projects/update_project_view_model/update_project_view_model.dart'
     as _i439;
+import '../network/dio_module.dart' as _i614;
 import '../services/firebase_service.dart' as _i758;
 import '../services/firebase_service_impl.dart' as _i704;
 
@@ -277,6 +322,8 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    final dioModule = _$DioModule();
+    gh.lazySingleton<_i361.Dio>(() => dioModule.dio());
     gh.factory<_i758.FirebaseService>(() => _i704.FirebaseServiceImpl());
     gh.factory<_i79.ProjectDisplaySectionsRemoteDataSource>(
       () => _i1032.ProjectDisplaySectionsRemoteDataSourceImpl(
@@ -289,11 +336,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i636.DalelAlShamPlaceRemoteDataSource>(
       () => _i813.DalelAlShamPlaceRemoteDataSourceImpl(
         firebaseService: gh<_i758.FirebaseService>(),
-      ),
-    );
-    gh.factory<_i977.GetNewestProjectsRepository>(
-      () => _i766.GetNewestProjectsRepositoryImpl(
-        gh<_i157.GetNewestProjectsRemoteDataSource>(),
       ),
     );
     gh.factory<_i425.AddJobRemoteDataSource>(
@@ -309,11 +351,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i912.GetProjectsByDisplaySectionRemoteDataSource>(
       () => _i278.GetProjectsByDisplaySectionRemoteDataSourceImpl(
         gh<_i758.FirebaseService>(),
-      ),
-    );
-    gh.factory<_i667.GetNewestProjectsUseCase>(
-      () => _i667.GetNewestProjectsUseCase(
-        gh<_i977.GetNewestProjectsRepository>(),
       ),
     );
     gh.factory<_i296.UpdateOpportunityRemoteDataSource>(
@@ -337,6 +374,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i1046.BannersRemoteDataSource>(
       () => _i576.BannersRemoteDataSourceImpl(gh<_i758.FirebaseService>()),
+    );
+    gh.factory<_i157.GetNewestProjectsRemoteDataSource>(
+      () => _i64.GetNewestProjectsRemoteDataSourceImpl(
+        gh<_i758.FirebaseService>(),
+      ),
     );
     gh.factory<_i131.GetProjectDetailsRemoteDataSource>(
       () => _i379.GetProjectDetailsRemoteDataSourceImpl(
@@ -363,6 +405,10 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i968.ProjectDisplaySectionsRepositoryImpl(
         gh<_i79.ProjectDisplaySectionsRemoteDataSource>(),
       ),
+    );
+    gh.factory<_i725.GetPendingProjectsRemoteDataSource>(
+      () =>
+          _i878.GetAllProjectsRemoteDataSourceImpl(gh<_i758.FirebaseService>()),
     );
     gh.factory<_i168.GetProjectsByCategoryRemoteDataSource>(
       () => _i570.GetProjectsByCategoryRemoteDataSourceImpl(
@@ -436,6 +482,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i369.BannerUseCase>(
       () => _i369.BannerUseCase(gh<_i572.BannersRepository>()),
     );
+    gh.factory<_i730.GetAllAppLinksViewModel>(
+      () => _i730.GetAllAppLinksViewModel(gh<_i1018.AppLinksUseCase>()),
+    );
     gh.factory<_i1000.GetProjectsByDisplaySectionUseCase>(
       () => _i1000.GetProjectsByDisplaySectionUseCase(
         gh<_i741.GetProjectsByDisplaySectionRepository>(),
@@ -474,12 +523,25 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i585.AddOpportunityRemoteDataSource>(),
       ),
     );
+    gh.factory<_i977.GetNewestProjectsRepository>(
+      () => _i766.GetNewestProjectsRepositoryImpl(
+        gh<_i157.GetNewestProjectsRemoteDataSource>(),
+      ),
+    );
     gh.factory<_i886.CategoryUseCase>(
       () => _i886.CategoryUseCase(gh<_i1066.CategoryRepos>()),
+    );
+    gh.factory<_i529.AddOrUpdateLinkViewModel>(
+      () => _i529.AddOrUpdateLinkViewModel(gh<_i1018.AppLinksUseCase>()),
     );
     gh.factory<_i76.GetBannersByPositionViewModel>(
       () => _i76.GetBannersByPositionViewModel(
         bannerUseCase: gh<_i369.BannerUseCase>(),
+      ),
+    );
+    gh.factory<_i667.GetNewestProjectsUseCase>(
+      () => _i667.GetNewestProjectsUseCase(
+        gh<_i977.GetNewestProjectsRepository>(),
       ),
     );
     gh.factory<_i184.GetProjectDetailsRepository>(
@@ -501,16 +563,37 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i377.ProjectDisplaySectionsRepository>(),
       ),
     );
+    gh.factory<_i382.GetProjectsByDisplaySectionViewModel>(
+      () => _i382.GetProjectsByDisplaySectionViewModel(
+        gh<_i1000.GetProjectsByDisplaySectionUseCase>(),
+      ),
+    );
     gh.factory<_i53.UpdateOpportunityUseCase>(
       () => _i53.UpdateOpportunityUseCase(gh<_i381.UpdateOpportunityRepo>()),
+    );
+    gh.factory<_i316.DeleteCategoryViewModel>(
+      () => _i316.DeleteCategoryViewModel(
+        deleteCategoryUseCase: gh<_i886.CategoryUseCase>(),
+      ),
     );
     gh.factory<_i340.DalelAlShamPlaceUseCase>(
       () => _i340.DalelAlShamPlaceUseCase(
         dalelAlShamPlaceRepo: gh<_i130.DalelAlShamPlaceRepo>(),
       ),
     );
+    gh.factory<_i457.GetPendingProjectsRepository>(
+      () => _i500.GetPendingProjectsRepositoryImpl(
+        gh<_i725.GetPendingProjectsRemoteDataSource>(),
+      ),
+    );
     gh.factory<_i645.UpdateProjectUseCase>(
       () => _i645.UpdateProjectUseCase(gh<_i943.UpdateProjectRepository>()),
+    );
+    gh.factory<_i835.AddBannerViewModel>(
+      () => _i835.AddBannerViewModel(gh<_i369.BannerUseCase>()),
+    );
+    gh.factory<_i612.DeleteBannerViewModel>(
+      () => _i612.DeleteBannerViewModel(gh<_i369.BannerUseCase>()),
     );
     gh.factory<_i108.GetJobByIdRepo>(
       () => _i93.GetJobByIdRepoImpl(gh<_i104.GetJobByIdRemoteDataSource>()),
@@ -525,6 +608,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i184.GetProjectDetailsRepository>(),
       ),
     );
+    gh.factory<_i151.UpdateProjectDisplaySectionViewModel>(
+      () => _i151.UpdateProjectDisplaySectionViewModel(
+        updateProjectDisplaySectionUseCase:
+            gh<_i297.ProjectDisplaySectionsUseCase>(),
+      ),
+    );
     gh.factory<_i365.GetAllOpportunitiesUsecase>(
       () =>
           _i365.GetAllOpportunitiesUsecase(gh<_i272.GetAllOpportunitiesRepo>()),
@@ -537,6 +626,23 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i376.UpdateJobUsecase>(
       () => _i376.UpdateJobUsecase(gh<_i38.UpdateJobRepo>()),
     );
+    gh.factory<_i11.AddProjectDisplaySectionViewModel>(
+      () => _i11.AddProjectDisplaySectionViewModel(
+        addProjectDisplaySectionUseCase:
+            gh<_i297.ProjectDisplaySectionsUseCase>(),
+      ),
+    );
+    gh.factory<_i287.UpdateCategoryViewModel>(
+      () => _i287.UpdateCategoryViewModel(
+        updateCategoryUseCase: gh<_i886.CategoryUseCase>(),
+      ),
+    );
+    gh.factory<_i745.DeleteProjectDisplaySectionViewModel>(
+      () => _i745.DeleteProjectDisplaySectionViewModel(
+        deleteProjectDisplaySectionUseCase:
+            gh<_i297.ProjectDisplaySectionsUseCase>(),
+      ),
+    );
     gh.factory<_i117.GetJobByIdUsecase>(
       () => _i117.GetJobByIdUsecase(gh<_i108.GetJobByIdRepo>()),
     );
@@ -545,6 +651,16 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i1047.AddJobUsecase>(
       () => _i1047.AddJobUsecase(gh<_i569.AddJobRepo>()),
+    );
+    gh.factory<_i176.GetPendingProjectsUsecase>(
+      () => _i176.GetPendingProjectsUsecase(
+        gh<_i457.GetPendingProjectsRepository>(),
+      ),
+    );
+    gh.factory<_i851.AddCategoryViewModel>(
+      () => _i851.AddCategoryViewModel(
+        addCategoryUseCase: gh<_i886.CategoryUseCase>(),
+      ),
     );
     gh.factory<_i654.GetProjectsByCategoryUseCase>(
       () => _i654.GetProjectsByCategoryUseCase(
@@ -576,6 +692,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i654.GetProjectsByCategoryUseCase>(),
       ),
     );
+    gh.factory<_i593.GetAllProjectDisplaySectionsViewModel>(
+      () => _i593.GetAllProjectDisplaySectionsViewModel(
+        getAllProjectDisplaySectionsUseCase:
+            gh<_i297.ProjectDisplaySectionsUseCase>(),
+      ),
+    );
     gh.factory<_i111.DeleteJobUsecase>(
       () => _i111.DeleteJobUsecase(gh<_i686.DeleteJobRepo>()),
     );
@@ -583,11 +705,29 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i247.UpdateOpportunityViewModel(gh<_i53.UpdateOpportunityUseCase>()),
     );
+    gh.factory<_i409.PrayerTimesViewModel>(
+      () => _i409.PrayerTimesViewModel(gh<_i308.PrayerTimesUseCase>()),
+    );
+    gh.factory<_i648.AddProjectToSectionViewModel>(
+      () => _i648.AddProjectToSectionViewModel(
+        gh<_i297.ProjectDisplaySectionsUseCase>(),
+      ),
+    );
     gh.factory<_i623.GetAllCategoriesViewModel>(
       () => _i623.GetAllCategoriesViewModel(gh<_i886.CategoryUseCase>()),
     );
     gh.factory<_i29.GetAllJobsViewModel>(
       () => _i29.GetAllJobsViewModel(gh<_i772.GetAllJobsUsecase>()),
+    );
+    gh.factory<_i856.GetNewestProjectsViewModel>(
+      () => _i856.GetNewestProjectsViewModel(
+        gh<_i667.GetNewestProjectsUseCase>(),
+      ),
+    );
+    gh.factory<_i895.GetPendingProjectsViewModel>(
+      () => _i895.GetPendingProjectsViewModel(
+        gh<_i176.GetPendingProjectsUsecase>(),
+      ),
     );
     gh.factory<_i662.UpdateJobViewModel>(
       () => _i662.UpdateJobViewModel(gh<_i376.UpdateJobUsecase>()),
@@ -609,3 +749,5 @@ extension GetItInjectableX on _i174.GetIt {
     return this;
   }
 }
+
+class _$DioModule extends _i614.DioModule {}

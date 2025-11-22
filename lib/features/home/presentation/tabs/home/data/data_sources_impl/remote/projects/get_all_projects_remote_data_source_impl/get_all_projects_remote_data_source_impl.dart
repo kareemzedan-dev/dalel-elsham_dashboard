@@ -10,6 +10,7 @@ import '../../../../models/project_model.dart';
 @Injectable(as: GetAllProjectsRemoteDataSource)
 class GetAllProjectsRemoteDataSourceImpl
     implements GetAllProjectsRemoteDataSource {
+
   final FirebaseService fireStoreService;
 
   GetAllProjectsRemoteDataSourceImpl(this.fireStoreService);
@@ -17,26 +18,30 @@ class GetAllProjectsRemoteDataSourceImpl
   @override
   Future<Either<Failures, List<ProjectEntity>>> getAllProjects() async {
     try {
+      // 1) فحص الاتصال بالإنترنت
       if (!await NetworkValidation.hasInternet()) {
         return Left(NetworkFailure("لا يوجد اتصال بالإنترنت"));
       }
 
+      // 2) جلب البيانات من Firestore
       final List<Map<String, dynamic>> rawData =
       await fireStoreService.getCollection(collection: "projects");
 
-      final projects = rawData.map((data) {
+      // 3) فلترة المشاريع المعتمدة فقط
+      final filtered = rawData.where((item) {
+        return item["status"] == "approved";
+      }).toList();
+
+      // 4) تحويل البيانات
+      final projects = filtered.map((data) {
         return ProjectModel.fromMap(
           data,
           data['id'] ?? "",
         );
       }).toList();
 
-      // ⚠️ هنا الفلترة على المشاريع اللي حالتها pending
-      final pendingProjects = projects
-          .where((project) => project.status == "pending")
-          .toList();
+      return Right(projects);
 
-      return Right(pendingProjects);
     } catch (e) {
       return Left(ServerFailure("حدث خطأ أثناء جلب المشاريع: $e"));
     }

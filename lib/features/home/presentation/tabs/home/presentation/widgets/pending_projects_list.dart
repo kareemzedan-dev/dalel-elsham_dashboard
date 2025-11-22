@@ -1,5 +1,3 @@
-import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/data/data_sources/remote/projects/get_all_projects_remote_data_source/get_all_projects_remote_data_source.dart';
-import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/projects/get_all_projects_view_model/get_all_projects_view_model_states.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/widgets/pending_project_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,19 +6,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../../../../config/routes/routes_manager.dart';
-import '../manager/projects/get_all_projects_view_model/get_all_projects_view_model.dart';
+import '../manager/projects/get_pending_projects_view_model/get_pending_projects_view_model.dart';
+import '../manager/projects/get_pending_projects_view_model/get_pending_projects_view_model_states.dart';
 
 class PendingProjectsList extends StatelessWidget {
   const PendingProjectsList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetAllProjectsViewModel, GetAllProjectsViewModelStates>(
+    return BlocBuilder<GetPendingProjectsViewModel, GetPendingProjectsViewModelStates>(
       builder: (context, state) {
-        if (state is GetAllProjectsViewModelLoading) {
+        if (state is GetPendingProjectsViewModelLoading) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (state is GetAllProjectsViewModelSuccess) {
+        if (state is GetPendingProjectsViewModelSuccess) {
           if (state.projects.isEmpty) {
             return SizedBox(
               height: MediaQuery.of(context).size.height * 0.6.sp,

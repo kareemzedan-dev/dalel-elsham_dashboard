@@ -13,6 +13,9 @@ class BannerModel extends BannerEntity {
     required super.createdAt,
   });
 
+  // -------------------------------------------------------------------------
+  // 🔥 FROM MAP
+  // -------------------------------------------------------------------------
   factory BannerModel.fromMap(Map<String, dynamic> json, String docId) {
     return BannerModel(
       id: docId,
@@ -27,6 +30,9 @@ class BannerModel extends BannerEntity {
     );
   }
 
+  // -------------------------------------------------------------------------
+  // 🔥 TO MAP
+  // -------------------------------------------------------------------------
   Map<String, dynamic> toMap() {
     return {
       "imageUrl": imageUrl,
@@ -38,5 +44,22 @@ class BannerModel extends BannerEntity {
       "order": order,
       "createdAt": createdAt.toIso8601String(),
     };
+  }
+
+  // -------------------------------------------------------------------------
+  // 🔥 FROM ENTITY → MODEL
+  // -------------------------------------------------------------------------
+  factory BannerModel.fromEntity(BannerEntity entity) {
+    return BannerModel(
+      id: entity.id,
+      imageUrl: entity.imageUrl,
+      type: entity.type,
+      link: entity.link,
+      projectId: entity.projectId,
+      places: entity.places,
+      isActive: entity.isActive,
+      order: entity.order,
+      createdAt: entity.createdAt,
+    );
   }
 }

@@ -42,25 +42,28 @@ class _CustomOptionSelectorState extends State<CustomOptionSelector> {
             });
             widget.onSelect(item);
           },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
-            decoration: BoxDecoration(
-              color: isActive
-                  ? ColorsManager.primaryColor
-                  : Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
+              decoration: BoxDecoration(
                 color: isActive
                     ? ColorsManager.primaryColor
-                    : Colors.grey.shade400,
+                    : Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: isActive
+                      ? ColorsManager.primaryColor
+                      : Colors.grey.shade400,
+                ),
               ),
-            ),
-            child: Text(
-              item,
-              style: TextStyle(
-                color: isActive ? Colors.white : Colors.black87,
-                fontSize: 14.sp,
-                fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+              child: Text(
+                item,
+                style: TextStyle(
+                  color: isActive ? Colors.white : Colors.black87,
+                  fontSize: 14.sp,
+                  fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+                ),
               ),
             ),
           ),

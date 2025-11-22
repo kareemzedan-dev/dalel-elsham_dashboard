@@ -13,4 +13,10 @@ class BannerUseCase {
   Future<Either<Failures, List<BannerEntity>>> getBannersByPosition(String position) {
     return bannersRepository.getBannersByPosition(position);
   }
+  Future<Either<Failures,void>> addBanner(BannerEntity banner) {
+    return bannersRepository.addBanner(banner);
+  }
+  Future<Either<Failures,void>> deleteBanner(String id) {
+    return bannersRepository.deleteBanner(id);
+  }
 }

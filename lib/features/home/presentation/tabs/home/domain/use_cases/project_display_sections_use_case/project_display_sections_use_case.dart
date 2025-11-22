@@ -39,4 +39,15 @@ class ProjectDisplaySectionsUseCase {
       id,
     );
   }
+  Future<Either<Failures, void>> addProjectToSection(
+    String projectId,
+    String sectionId,
+
+  ) async {
+    return await projectDisplaySectionsRepository.addProjectToSection(
+      projectId,
+      sectionId,
+
+    );
+  }
 }

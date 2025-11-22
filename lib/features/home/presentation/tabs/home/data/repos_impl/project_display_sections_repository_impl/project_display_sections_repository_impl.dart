@@ -41,4 +41,10 @@ class ProjectDisplaySectionsRepositoryImpl
       projectDisplaySectionEntity,
     );
   }
+
+  @override
+  Future<Either<Failures, void>> addProjectToSection(String projectId, String sectionId) {
+
+    return remoteDataSource.addProjectToSection(projectId, sectionId);
+  }
 }

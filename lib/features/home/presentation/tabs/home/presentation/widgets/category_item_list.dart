@@ -1,34 +1,33 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../../config/routes/routes_manager.dart';
+import '../../../../../../../core/di/di.dart';
 import '../../../../../../../core/utils/assets_manager.dart';
+import '../../domain/entities/category_entity.dart';
+import '../manager/categories/delete_category_view_model/delete_category_view_model.dart';
+import 'admin_category_options.dart';
 import 'category_item.dart';
 
 class CategoryItemList extends StatelessWidget {
-  CategoryItemList({super.key});
+  CategoryItemList({super.key, required this.categoriesList, this.isAdmin = false});
 
-  final List<Map<String, String>> categoriesList = [
-    {"title": "طعام", "image": AssetsManager.category1},
-    {"title": "سيارات", "image": AssetsManager.category2},
-    {"title": "مشافي", "image": AssetsManager.category3},
-    {"title": "طعام", "image": AssetsManager.category1},
-    {"title": "سيارات", "image": AssetsManager.category2},
-    {"title": "مشافي", "image": AssetsManager.category3},
-    {"title": "طعام", "image": AssetsManager.category1},
-    {"title": "سيارات", "image": AssetsManager.category2},
-    {"title": "مشافي", "image": AssetsManager.category3},
-    {"title": "طعام", "image": AssetsManager.category1},
-    {"title": "سيارات", "image": AssetsManager.category2},
-    {"title": "مشافي", "image": AssetsManager.category3},
+  final List<CategoryEntity> categoriesList;
 
-
-
-  ];
-
-  List<List<Map<String, String>>> chunk(List<Map<String, String>> list, int maxItemsPerRow) {
-    List<List<Map<String, String>>> out = [];
+  final bool isAdmin; // NEW
+  List<List<CategoryEntity>> chunk(
+    List<CategoryEntity> list,
+    int maxItemsPerRow,
+  ) {
+    List<List<CategoryEntity>> out = [];
     for (int i = 0; i < list.length; i += maxItemsPerRow) {
-      out.add(list.sublist(i, (i + maxItemsPerRow > list.length) ? list.length : i + maxItemsPerRow));
+      out.add(
+        list.sublist(
+          i,
+          (i + maxItemsPerRow > list.length) ? list.length : i + maxItemsPerRow,
+        ),
+      );
     }
     return out;
   }
@@ -36,8 +35,14 @@ class CategoryItemList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const int maxItemsPerRow = 17;
-    final rows = chunk(categoriesList, maxItemsPerRow); // صفوف كل واحدة تشمل حتى 17 عنصر
-    final int columnsCount = rows.fold<int>(0, (prev, row) => row.length > prev ? row.length : prev); // أطول صف
+    final rows = chunk(
+      categoriesList,
+      maxItemsPerRow,
+    ); // صفوف كل واحدة تشمل حتى 17 عنصر
+    final int columnsCount = rows.fold<int>(
+      0,
+      (prev, row) => row.length > prev ? row.length : prev,
+    ); // أطول صف
 
     final double columnWidth = 90.w;
     final double itemHeight = 90.h;
@@ -45,7 +50,8 @@ class CategoryItemList extends StatelessWidget {
     final double itemSpacing = 1.h;
 
     return SizedBox(
-      height: (itemHeight * rows.length) + (itemSpacing * (rows.length - 1)), // ارتفاع كافٍ لعدد الصفوف
+      height: (itemHeight * rows.length) + (itemSpacing * (rows.length - 1)),
+      // ارتفاع كافٍ لعدد الصفوف
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -65,15 +71,33 @@ class CategoryItemList extends StatelessWidget {
                     if (colIndex < row.length) {
                       final category = row[colIndex];
                       return Padding(
-                        padding: EdgeInsets.only(bottom: isLast ? 0 : itemSpacing),
+                        padding: EdgeInsets.only(
+                          bottom: isLast ? 0 : itemSpacing,
+                        ),
                         child: SizedBox(
                           height: itemHeight,
                           child: CategoryItem(
                             onTap: () {
-                              Navigator.pushNamed(context, RoutesManager.categoriesDetails);
+
+
+                                Navigator.pushNamed(
+                                  context,
+                                  RoutesManager.categoriesDetails,
+                                  arguments: {
+                                    'categoryId': category.id,
+                                    'categoryName': category.name,
+                                  },
+                                );
+
                             },
-                            image: category["image"]!,
-                            title: category["title"]!,
+
+                            image: category.imageUrl,
+                            title: category.name,
+
+                            // NEW BUTTONS
+                            optionsMenu: isAdmin
+                                ? () => _showAdminOptions(context, category)
+                                : null,
                           ),
                         ),
                       );
@@ -81,7 +105,6 @@ class CategoryItemList extends StatelessWidget {
 
                     return SizedBox(height: itemHeight);
                   }),
-
                 ),
               ),
             );
@@ -90,4 +113,19 @@ class CategoryItemList extends StatelessWidget {
       ),
     );
   }
+  void _showAdminOptions(BuildContext context, CategoryEntity category) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return BlocProvider.value(
+          value: context.read<DeleteCategoryViewModel>(),
+          child: AdminCategoryOptions(
+            category: category,
+            parentContext: context, // ← بنبعت الـ context السليم
+          ),
+        );
+      },
+    );
+  }
+
 }

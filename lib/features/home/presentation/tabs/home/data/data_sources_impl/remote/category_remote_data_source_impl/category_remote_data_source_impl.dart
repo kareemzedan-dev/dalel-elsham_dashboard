@@ -16,26 +16,94 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   @override
   Future<Either<Failures, List<CategoryEntity>>> getAllCategories() async {
     try {
-      // 1) تحقق من الانترنت
       if (!await NetworkValidation.hasInternet()) {
         return Left(NetworkFailure("لا يوجد اتصال بالانترنت"));
       }
 
-      // 2) جلب البيانات من firestore
       final data = await firebaseService.getCollection(
         collection: "categories",
       );
 
-      // 3) تحويلها لموديل
       final categories = data.map((item) {
         return CategoryModel.fromMap(item, item["id"]);
       }).toList();
 
-      // 4) إرجاعها
       return Right(categories);
 
     } catch (e) {
       return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  // ===========================================================
+  // 🔥 1) إضافة فئة جديدة
+  // ===========================================================
+  @override
+  Future<Either<Failures, void>> addCategory(CategoryEntity category) async {
+    try {
+      if (!await NetworkValidation.hasInternet()) {
+        return Left(NetworkFailure("لا يوجد اتصال بالانترنت"));
+      }
+
+      final model = CategoryModel.fromEntity(category);
+
+      await firebaseService.addDocument(
+        collection: "categories",
+        data: model.toMap(),
+        docId: model.id,
+      );
+
+      return const Right(null);
+
+    } catch (e) {
+      return Left(ServerFailure("فشل إضافة الفئة: $e"));
+    }
+  }
+
+  // ===========================================================
+  // 🔥 2) تحديث فئة
+  // ===========================================================
+  @override
+  Future<Either<Failures, void>> updateCategory(CategoryEntity category) async {
+    try {
+      if (!await NetworkValidation.hasInternet()) {
+        return Left(NetworkFailure("لا يوجد اتصال بالانترنت"));
+      }
+
+      final model = CategoryModel.fromEntity(category);
+
+      await firebaseService.updateDocument(
+        collection: "categories",
+        docId: model.id,
+        data: model.toMap(),
+      );
+
+      return const Right(null);
+
+    } catch (e) {
+      return Left(ServerFailure("فشل تحديث الفئة: $e"));
+    }
+  }
+
+  // ===========================================================
+  // 🔥 3) حذف فئة
+  // ===========================================================
+  @override
+  Future<Either<Failures, void>> deleteCategory(String categoryId) async {
+    try {
+      if (!await NetworkValidation.hasInternet()) {
+        return Left(NetworkFailure("لا يوجد اتصال بالانترنت"));
+      }
+
+      await firebaseService.deleteDocument(
+        collection: "categories",
+        docId: categoryId,
+      );
+
+      return const Right(null);
+
+    } catch (e) {
+      return Left(ServerFailure("فشل حذف الفئة: $e"));
     }
   }
 }
