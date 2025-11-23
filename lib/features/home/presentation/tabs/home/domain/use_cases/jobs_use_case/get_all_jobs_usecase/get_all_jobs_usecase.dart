@@ -12,4 +12,7 @@ class GetAllJobsUsecase {
   Future<Either<Failures, List<JobEntity>>> getAllJobs() {
     return getAllJobsRepo.getAllJobs();
   }
+  Future<Either<Failures, List<JobEntity>>> getPendingJobs() {
+    return getAllJobsRepo.getPendingJobs();
+  }
 }

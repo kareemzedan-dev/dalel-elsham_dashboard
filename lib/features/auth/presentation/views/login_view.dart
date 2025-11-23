@@ -1,0 +1,21 @@
+import 'package:dlyl_alsham_dashboard/features/auth/presentation/views/widgets/login_view_body.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/components/custom_app_bar.dart';
+import '../../../../core/di/di.dart';
+import '../manager/login_view_model/login_view_model.dart';
+
+class LoginView extends StatelessWidget {
+  const LoginView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomAppBar(title: "تسجيل الدخول"),
+      body: SafeArea(child: BlocProvider(
+          create: (context) => getIt<LoginViewModel>(),
+          child: LoginViewBody())),
+    );
+  }
+}

@@ -8,7 +8,7 @@ class CustomTextFormField extends StatefulWidget {
     super.key,
     required this.hintText,
     this.iconShow = false,
-    required this.keyboardType,
+      this.keyboardType,
     this.onSaved,
     this.validator,
     this.isEmailValidator = false,
@@ -25,7 +25,7 @@ class CustomTextFormField extends StatefulWidget {
 
   final String? hintText;
   final bool iconShow;
-  final TextInputType keyboardType;
+  final TextInputType  ? keyboardType;
   final void Function(String?)? onSaved;
   final String? Function(String?)? validator;
   final bool isEmailValidator;

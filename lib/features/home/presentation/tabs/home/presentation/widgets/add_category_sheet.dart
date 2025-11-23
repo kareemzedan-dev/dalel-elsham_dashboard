@@ -14,6 +14,8 @@ import 'package:uuid/uuid.dart';
 import '../../domain/entities/category_entity.dart';
 import '../manager/categories/add_category_view_model/add_category_view_model.dart';
 import '../manager/categories/add_category_view_model/add_category_view_model_states.dart';
+import '../manager/categories/get_all_categories_view_model/get_all_categories_view_model.dart';
+import '../manager/categories/get_all_categories_view_model/get_all_categories_view_model_states.dart';
 
 class AddCategorySheet extends StatefulWidget {
   const AddCategorySheet({super.key});
@@ -24,6 +26,7 @@ class AddCategorySheet extends StatefulWidget {
 
 class _AddCategorySheetState extends State<AddCategorySheet> {
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController orderController = TextEditingController();
   Uint8List? imageBytes;
   String? imageUrl;
 
@@ -62,11 +65,22 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
       return;
     }
 
+    /// ⭐ تحديد قيمة الـ order تلقائياً
+    int nextOrder = 1;
+    final categoriesState = context.read<GetAllCategoriesViewModel>().state;
+
+    if (categoriesState is GetAllCategoriesViewModelSuccess) {
+      nextOrder = categoriesState.categories.length + 1;
+    }
+
     final category = CategoryEntity(
       id: const Uuid().v4(),
       name: nameController.text.trim(),
       imageUrl: imageUrl!,
-      order: 0,
+      order: orderController.text.isNotEmpty
+          ? int.parse(orderController.text.trim())
+          : nextOrder,
+
       isActive: true,
       createdAt: DateTime.now(),
     );
@@ -79,7 +93,11 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
     return BlocListener<AddCategoryViewModel, AddCategoryViewModelStates>(
       listener: (context, state) {
         if (state is AddCategoryViewModelSuccess) {
-        Navigator.pushNamedAndRemoveUntil(context, RoutesManager.home, (route) => false,);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            RoutesManager.home,
+            (route) => false,
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text("✔ تم إضافة الفئة بنجاح"),
@@ -117,6 +135,12 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
               keyboardType: TextInputType.text,
             ),
             SizedBox(height: 20.h),
+            CustomTextFormField(
+              textEditingController: orderController,
+              hintText: "رقم ترتيب العنصر",
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 20.h),
 
             /// صورة الفئة
             GestureDetector(
@@ -130,17 +154,17 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                 ),
                 child: imageBytes != null
                     ? ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: Image.memory(imageBytes!, fit: BoxFit.cover),
-                )
+                        borderRadius: BorderRadius.circular(12.r),
+                        child: Image.memory(imageBytes!, fit: BoxFit.cover),
+                      )
                     : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(AssetsManager.uploadImage, height: 50.h),
-                    const SizedBox(height: 8),
-                    const Text("اضغط لاختيار صورة"),
-                  ],
-                ),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(AssetsManager.uploadImage, height: 50.h),
+                          const SizedBox(height: 8),
+                          const Text("اضغط لاختيار صورة"),
+                        ],
+                      ),
               ),
             ),
 

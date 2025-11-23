@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../../../../core/utils/colors_manager.dart';
+
 class CategoryItem extends StatelessWidget {
   const CategoryItem({
     super.key,
@@ -14,7 +14,7 @@ class CategoryItem extends StatelessWidget {
 
   final String image, title;
   final VoidCallback onTap;
-  final VoidCallback? optionsMenu; // NEW
+  final VoidCallback? optionsMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +27,8 @@ class CategoryItem extends StatelessWidget {
             clipBehavior: Clip.none,
             children: [
               Container(
-                padding: EdgeInsets.all(1.r),
-                decoration: BoxDecoration(
+                padding: EdgeInsets.all(2.r),
+                decoration: const BoxDecoration(
                   color: ColorsManager.primaryColor,
                   shape: BoxShape.circle,
                 ),
@@ -42,6 +42,7 @@ class CategoryItem extends StatelessWidget {
                 ),
               ),
 
+              /// زر القائمة للأدمن
               if (optionsMenu != null)
                 Positioned(
                   top: -5,
@@ -54,10 +55,10 @@ class CategoryItem extends StatelessWidget {
                         color: Colors.black54,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
+                      child:   Icon(
                         Icons.more_vert,
                         color: Colors.white,
-                        size: 16,
+                        size: 16.sp,
                       ),
                     ),
                   ),
@@ -65,19 +66,25 @@ class CategoryItem extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 8.h),
+          SizedBox(height: 6.h),
 
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(fontWeight: FontWeight.bold, fontSize: 16.sp),
+          /// النص بدون Overflow
+          SizedBox(
+            width: 80.w,
+            child: AutoSizeText(
+              title,
+              maxLines: 1,
+              minFontSize: 8,
+              maxFontSize: 13,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 13.sp,
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 }
-

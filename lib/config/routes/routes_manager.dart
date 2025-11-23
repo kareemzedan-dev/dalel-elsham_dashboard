@@ -3,6 +3,8 @@ import 'package:dlyl_alsham_dashboard/features/home/presentation/views/home_view
 import 'package:flutter/material.dart';
 
 import '../../core/enums/request_type.dart';
+import '../../features/auth/presentation/views/login_view.dart';
+import '../../features/auth/presentation/views/register_view.dart';
 import '../../features/home/presentation/tabs/dalel_elsham/presentation/views/dalel_elsham_tab_view.dart';
 import '../../features/home/presentation/tabs/home/domain/entities/job_entity.dart';
 import '../../features/home/presentation/tabs/home/presentation/views/Job_opportunities_view.dart';
@@ -29,6 +31,8 @@ class RoutesManager {
   static const String jobOpportunities = "jobOpportunities";
   static const String jobSeekers = "jobSeekers";
   static const String prayerTimes = "prayerTimes";
+  static const String login = "login";
+  static const String register = "register";
 
   static const String onboarding = "onboarding";
   static const String addNewService = "addNewService";
@@ -58,16 +62,20 @@ class RoutesManager {
         return MaterialPageRoute(builder: (_) =>   ProjectDetailsView(projectId: args['projectId'],
         ));
       case dalelElsham:
-        return MaterialPageRoute(builder: (_) => const DalelElshamTabView());
+        return MaterialPageRoute(builder: (_) =>   DalelElshamTabView());
       case jobOpportunities:
         return MaterialPageRoute(builder: (_) => const JobOpportunitiesView());
       case jobSeekers:
         return MaterialPageRoute(builder: (_) => const JobSeekersView());
       case prayerTimes:
         return MaterialPageRoute(builder: (_) => const PrayerTimesView());
+        case register:
+        return MaterialPageRoute(builder: (_) => const RegisterView());
+        case login:
+        return MaterialPageRoute(builder: (_) => const LoginView());
 
-      case addNewService:
-        return MaterialPageRoute(builder: (_) => const AddNewServiceView());
+      // case addNewService:
+      //   return MaterialPageRoute(builder: (_) => const AddNewServiceView());
       case jobOfferForm:
         return MaterialPageRoute(builder: (_) => const JobOfferFormView());
       case jobRequestForm:
@@ -76,13 +84,19 @@ class RoutesManager {
         return MaterialPageRoute(builder: (_) => const NewProjectsView());
 
       case adminProjectEdit:
-        final arguments = settings.arguments as Map<String, String>;
+        final arguments = settings.arguments as Map<String, dynamic>? ?? {};
+
         return MaterialPageRoute(
           builder: (_) => AdminProjectEditView(
-            projectId: arguments["projectId"]!,
-            projectTitle: arguments["projectTitle"]!,
+            projectId: arguments["projectId"] ?? "",
+            projectTitle: arguments["projectTitle"] ?? "",
+            approveText: arguments["approveText"] ?? "موافقة ونشر الإعلان",
+            rejectText: arguments["rejectText"] ?? "رفض / إلغاء الموافقة",
+            isEdit: arguments["isEdit"] ?? false,
           ),
         );
+
+
       case jobOpportunitiesManagement:
         final arguments = settings.arguments as Map<String, String>;
 
@@ -98,11 +112,14 @@ class RoutesManager {
         final job = arguments["job"] as JobEntity;
         final title = arguments["title"] as String;
 
+
         return MaterialPageRoute(
           builder: (_) => AdminJobRequestDetailsView(
             job: job,
             title: title,
             type: arguments["type"] as RequestType,
+            approveText: arguments["approveText"] ?? "قبول الطلب",
+            rejectText: arguments["rejectText"] ?? "رفض الطلب",
           ),
         );
       case bannersManagement:

@@ -32,6 +32,9 @@ class AssetsManager {
     static const String uploadImage = '$baseUrl/image_upload.png';
 
   static const String addNewServiceImage = '$baseUrl/image.png';
+  static const String jobsPhoto = '$baseUrl/jobs.jpg';
+  static const String opportunitiesPhoto = '$baseUrl/opport.jpg';
+  static const String mawaqet = '$baseUrl/mawaqet.jpg';
 
 
 }

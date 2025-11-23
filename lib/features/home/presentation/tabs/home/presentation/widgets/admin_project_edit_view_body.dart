@@ -1,6 +1,7 @@
 import 'package:dlyl_alsham_dashboard/config/routes/routes_manager.dart';
 import 'package:dlyl_alsham_dashboard/core/components/dismissible_error_card.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/domain/entities/project_entity.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/projects/delete_project_view_model/delete_project_view_model.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/projects/get_project_details_view_model/get_project_details_view_model.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/projects/update_project_view_model/update_project_view_model.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/projects/update_project_view_model/update_project_view_model_states.dart';
@@ -15,13 +16,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../../core/components/confirmation_dialog.dart';
 import '../../../../../../../core/services/image_picker_service.dart';
 import '../../../../../../../core/services/image_upload_service.dart';
+import '../../../../../../../core/services/notification_service.dart';
+import '../manager/projects/delete_project_view_model/delete_project_view_model_states.dart';
 import '../manager/projects/get_project_details_view_model/get_project_details_view_model_states.dart';
 import 'action_buttons_section.dart';
 import 'ad_settings_section.dart';
 import 'gallery_section.dart';
 
 class AdminProjectEditViewBody extends StatefulWidget {
-  const AdminProjectEditViewBody({super.key});
+  const AdminProjectEditViewBody({
+    super.key,
+    required this.approveText,
+    required this.rejectText,
+    required this.isEdit,
+  });
+
+  final String approveText;
+  final String rejectText;
+  final bool isEdit;
 
   @override
   State<AdminProjectEditViewBody> createState() =>
@@ -42,6 +54,7 @@ class _AdminProjectEditViewBodyState extends State<AdminProjectEditViewBody> {
   final mapLinkController = TextEditingController();
   final imagePicker = ImagePickerService();
   final imageUploader = ImageUploadService();
+
   bool isInitialized = false;
 
   String tier = "normal";
@@ -160,78 +173,141 @@ class _AdminProjectEditViewBodyState extends State<AdminProjectEditViewBody> {
                 ),
               ),
 
-              BlocConsumer<
-                UpdateProjectViewModel,
-                UpdateProjectViewModelStates
-              >(
-                listener: (context, updateState) {
-                  if (updateState is UpdateProjectViewModelSuccess) {
-                    showTemporaryMessage(
-                      context,
-                      "تم تحديث المشروع بنجاح",
-                      MessageType.success,
-                    );
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      RoutesManager.home,
-                      (route) => false,
-                    );
-                  } else if (updateState is UpdateProjectViewModelError) {
-                    showTemporaryMessage(
-                      context,
-                      updateState.message,
-                      MessageType.error,
-                    );
-                  }
-                },
-                builder: (context, updateState) {
-                  return ActionButtonsSection(
-                    onApprove: () {
-                      showConfirmationDialog(
-                        context: context,
-                        title: "تأكيد الموافقة",
-                        message: "هل أنت متأكد من الموافقة على هذا المشروع؟",
-                        onConfirm: () {
-                          context.read<UpdateProjectViewModel>().updateProject(
-                            ProjectEntity(
-                              id: state.project.id,
-                              title: titleController.text,
-                              description: descriptionController.text,
-                              categoryTitle: state.project.categoryTitle,
-                              images: galleryImages,
-                              logo: state.project.logo,
-                              phone: whatsappController.text,
-                              location: locationController.text,
-                              isActive: true,
-                              facebook: facebookController.text,
-                              instagram: instagramController.text,
-                              website: websiteController.text,
-                              mapLink: mapLinkController.text,
-                              whatsapp: whatsappController.text,
-                              workTimeFrom: fromController.text,
-                              workTimeTo: toController.text,
-                              duration: durationController.text,
-                              createdAt: state.project.createdAt,
-                              status: "approved",
-                              additionalImages: additionalImages,
+              MultiBlocListener(
+                listeners: [
+                  /// 🔥 نجاح / فشل التحديث
+                  BlocListener<UpdateProjectViewModel, UpdateProjectViewModelStates>(
+                    listener: (context, updateState) {
+                      if (updateState is UpdateProjectViewModelSuccess) {
+                        showTemporaryMessage(
+                          context,
+                          "تم تحديث المشروع بنجاح",
+                          MessageType.success,
+                        );
 
-                              tier: tier,
-                              viewCountOn: isActive,
-                              views: state.project.views,
-                              displaySections: state.project.displaySections,
-                            ),
-                          );
-                        },
-                        onCancel: () {},
-                      );
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          RoutesManager.home,
+                              (_) => false,
+                        );
+                      }
+
+                      if (updateState is UpdateProjectViewModelError) {
+                        showTemporaryMessage(
+                          context,
+                          updateState.message,
+                          MessageType.error,
+                        );
+                      }
                     },
-                    onReject: () {
-                      showConfirmationDialog(
-                        context: context,
-                        title: "تأكيد الرفض",
-                        message: "هل أنت متأكد من رفض هذا المشروع؟",
-                        onConfirm: () {
-                          context.read<UpdateProjectViewModel>().updateProject(
+                  ),
+
+                  /// 🔥 نجاح / فشل حذف المشروع
+                  BlocListener<DeleteProjectViewModel, DeleteProjectViewModelStates>(
+                    listener: (context, deleteState) {
+                      if (deleteState is DeleteProjectViewModelSuccess) {
+                        showTemporaryMessage(
+                          context,
+                          "تم حذف المشروع بنجاح",
+                          MessageType.success,
+                        );
+
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          RoutesManager.home,
+                              (_) => false,
+                        );
+                      }
+
+                      if (deleteState is DeleteProjectViewModelError) {
+                        showTemporaryMessage(
+                          context,
+                          deleteState.message,
+                          MessageType.error,
+                        );
+                      }
+                    },
+                  ),
+                ],
+                child: ActionButtonsSection(
+                  approveText: widget.approveText,
+                  rejectText: widget.rejectText,
+
+                  onApprove: () {
+                    showConfirmationDialog(
+                      context: context,
+                      title: widget.isEdit
+                          ? "تأكيد التعديل"
+                          : "تأكيد الموافقة",
+                      message: widget.isEdit
+                          ? "هل أنت متأكد أنك تريد تعديل هذا المشروع؟"
+                          : "هل أنت متأكد أنك تريد الموافقة على هذا المشروع؟",
+                      onConfirm: () {
+                        print({
+                          "id": state.project.id,
+                          "categoryTitle": state.project.categoryTitle,
+                          "logo": state.project.logo,
+                          "userId": state.project.userId,
+                          "displaySections": state.project.displaySections,
+                        });
+
+                        context.read<UpdateProjectViewModel>().updateProject(
+                          ProjectEntity(
+                            id: state.project.id,
+                            title: titleController.text,
+                            description: descriptionController.text,
+                            categoryTitle: state.project.categoryTitle,
+                            images: galleryImages,
+                            logo: state.project.logo,
+                            phone: whatsappController.text,
+                            location: locationController.text,
+                            isActive: true,
+                            facebook: facebookController.text,
+                            instagram: instagramController.text,
+                            website: websiteController.text,
+                            mapLink: mapLinkController.text,
+                            whatsapp: whatsappController.text,
+                            workTimeFrom: fromController.text,
+                            workTimeTo: toController.text,
+                            duration: durationController.text,
+                            createdAt: state.project.createdAt,
+
+                            status: widget.isEdit
+                                ? state.project.status
+                                : "approved",
+
+                            additionalImages: additionalImages,
+                            tier: tier,
+                            viewCountOn: isActive,
+                            views: state.project.views,
+                            displaySections: state.project.displaySections,
+                            userId: state.project.userId,
+
+                          ),
+                        );
+                      },
+                      onCancel: () {},
+                    );
+                  },
+
+                  onReject: () {
+                    showConfirmationDialog(
+                      context: context,
+                      title: widget.isEdit ? "تأكيد الحذف" : "تأكيد الرفض",
+                      message: widget.isEdit
+                          ? "هل أنت متأكد من حذف هذا المشروع؟"
+                          : "هل أنت متأكد من رفض هذا المشروع؟",
+                      onConfirm: () {
+                        if (widget.isEdit) {
+                          /// 🔥 حذف المشروع
+                          context
+                              .read<DeleteProjectViewModel>()
+                              .deleteProject(state.project.id);
+                        } else {
+                          /// 🔥 رفض المشروع
+                          context
+                              .read<UpdateProjectViewModel>()
+                              .updateProject(
                             ProjectEntity(
                               id: state.project.id,
                               title: titleController.text,
@@ -253,20 +329,21 @@ class _AdminProjectEditViewBodyState extends State<AdminProjectEditViewBody> {
                               createdAt: state.project.createdAt,
                               status: "rejected",
                               additionalImages: additionalImages,
-
                               tier: tier,
                               viewCountOn: isActive,
                               views: state.project.views,
                               displaySections: state.project.displaySections,
+                              userId: state.project.userId,
                             ),
                           );
-                        },
-                        onCancel: () {},
-                      );
-                    },
-                  );
-                },
+                        }
+                      },
+                      onCancel: () {},
+                    );
+                  },
+                ),
               ),
+
 
               SizedBox(height: 12.h),
             ],

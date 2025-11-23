@@ -14,6 +14,7 @@ class JobModel extends JobEntity {
     required super.duration,
     required super.createdAt,
     required super.status,
+    required super.userId,
   });
 
   /// FROM FIRESTORE
@@ -32,6 +33,8 @@ class JobModel extends JobEntity {
       createdAt: (map['createdAt'] is Timestamp)
           ? (map['createdAt'] as Timestamp).toDate()
           : DateTime.tryParse(map['createdAt'] ?? "") ?? DateTime.now(),
+      userId: map['userId'] ?? "",
+
     );
   }
 
@@ -49,6 +52,7 @@ class JobModel extends JobEntity {
       "duration": duration,
       "createdAt": createdAt,
       "status": status,
+      "userId": userId,
     };
   }
 }

@@ -1,3 +1,4 @@
+import 'package:dlyl_alsham_dashboard/core/cache/shared_preferences.dart';
 import 'package:dlyl_alsham_dashboard/core/utils/assets_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,12 +13,19 @@ class SplashViewBody extends StatefulWidget {
   State<SplashViewBody> createState() => _SplashViewBodyState();
 }
 
+
+
 class _SplashViewBodyState extends State<SplashViewBody> {
+  final token = SharedPrefHelper.getString("auth_token");
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, RoutesManager.home);
+      if (token != null) {
+        Navigator.pushReplacementNamed(context, RoutesManager.home);
+      } else {
+        Navigator.pushReplacementNamed(context, RoutesManager.login);
+      }
     });
   }
 

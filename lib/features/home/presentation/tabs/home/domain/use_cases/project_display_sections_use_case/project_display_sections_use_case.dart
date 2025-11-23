@@ -50,4 +50,13 @@ class ProjectDisplaySectionsUseCase {
 
     );
   }
+  Future<Either<Failures, void>> removeProjectFromSection(
+    String projectId,
+    String sectionId,
+  ) async {
+    return await projectDisplaySectionsRepository.removeProjectFromSection(
+      projectId,
+      sectionId,
+    );
+  }
 }

@@ -12,23 +12,47 @@ import 'package:uuid/uuid.dart';
 import '../../data/model/dalel_al_sham_place_model.dart';
 import '../manager/add_place_view_model/add_place_view_model.dart';
 import '../manager/add_place_view_model/add_place_view_model_states.dart';
+import '../manager/get_all_place_view_model/get_all_place_view_model.dart';
+import '../manager/update_place_view_model/update_place_view_model.dart';
+import '../manager/update_place_view_model/update_place_view_model_states.dart';
 
-class AddPlaceSheet extends StatefulWidget {
-  const AddPlaceSheet({super.key});
+class PlaceFormSheet extends StatefulWidget {
+  final DalelAlShamPlaceModel? place; // لو null → add
+  final BuildContext parentContext;   // ← إضافة جديدة
+
+  const PlaceFormSheet({super.key, this.place,required  this.parentContext});
+
+  bool get isEdit => place != null;
 
   @override
-  State<AddPlaceSheet> createState() => _AddPlaceSheetState();
+  State<PlaceFormSheet> createState() => _PlaceFormSheetState();
 }
 
-class _AddPlaceSheetState extends State<AddPlaceSheet> {
+class _PlaceFormSheetState extends State<PlaceFormSheet> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController mapLinkController = TextEditingController();
 
-  final List<Uint8List> imageBytesList = [];
-  final List<String> uploadedImages = [];
+  /// صور جديدة + صور قديمة
+  final List<Uint8List> newImagesBytes = [];
+  List<String> oldImages = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.isEdit) {
+      nameController.text = widget.place!.name;
+      descController.text = widget.place!.description;
+      addressController.text = widget.place!.addressText;
+      phoneController.text = widget.place!.phone;
+      mapLinkController.text = widget.place!.mapLink ?? "";
+
+      oldImages = List.from(widget.place!.images);
+    }
+  }
 
   Future<void> pickImages() async {
     final source = await showImageSourcePicker(context);
@@ -36,46 +60,37 @@ class _AddPlaceSheetState extends State<AddPlaceSheet> {
 
     final picker = ImagePickerService();
 
-    /// اختيار من المعرض → صورة واحدة فقط
-    if (source == "gallery") {
-      final result = await picker.pickFromGallery();
-      if (!result.isEmpty) {
-        setState(() {
-          imageBytesList.add(result.bytes!);
-        });
-      }
-    }
-    else {
-      /// كاميرا – صورة واحدة
-      final result = await picker.pickFromCamera();
-      if (!result.isEmpty) {
-        setState(() {
-          imageBytesList.add(result.bytes!);
-        });
-      }
+    final result = source == "gallery"
+        ? await picker.pickFromGallery()
+        : await picker.pickFromCamera();
+
+    if (!result.isEmpty) {
+      setState(() {
+        newImagesBytes.add(result.bytes!);
+      });
     }
   }
 
-
-  Future<void> uploadAllImages() async {
-    uploadedImages.clear();
+  /// رفع الصور الجديدة فقط
+  Future<List<String>> uploadNewImages() async {
     final uploader = ImageUploadService();
+    List<String> uploaded = [];
 
-    for (var bytes in imageBytesList) {
+    for (Uint8List bytes in newImagesBytes) {
       final url = await uploader.uploadImage(
         bytes: bytes,
         bucket: "dalel_al_sham",
         folder: "places",
       );
-
-      uploadedImages.add(url!);
+      uploaded.add(url!);
     }
+    return uploaded;
   }
 
   void submit() async {
     if (nameController.text.isEmpty ||
         descController.text.isEmpty ||
-        imageBytesList.isEmpty) {
+        (oldImages.isEmpty && newImagesBytes.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("يجب إدخال جميع البيانات المطلوبة"),
@@ -85,44 +100,77 @@ class _AddPlaceSheetState extends State<AddPlaceSheet> {
       return;
     }
 
-    /// رفع كل الصور
-    await uploadAllImages();
+    final uploadedNewImages = await uploadNewImages();
+    final allImages = [...oldImages, ...uploadedNewImages];
 
-    /// تجهيز البيانات
-
-    context.read<AddPlaceViewModel>().addPlace(
-      DalelAlShamPlaceModel(
-        id: const Uuid().v4(),
-        name: nameController.text.trim(),
-        description: descController.text.trim(),
-        addressText: addressController.text.trim(),
-        phone: phoneController.text.trim(),
-        mapLink: mapLinkController.text.trim(),
-        images: uploadedImages,
-      ),
+    final model = DalelAlShamPlaceModel(
+      id: widget.isEdit ? widget.place!.id : const Uuid().v4(),
+      name: nameController.text.trim(),
+      description: descController.text.trim(),
+      addressText: addressController.text.trim(),
+      phone: phoneController.text.trim(),
+      mapLink: mapLinkController.text.trim(),
+      images: allImages,
     );
+
+    if (widget.isEdit) {
+      context.read<UpdatePlaceViewModel>().updatePlace(model);
+    } else {
+      context.read<AddPlaceViewModel>().addPlace(model);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AddPlaceViewModel, AddPlaceViewModelStates>(
-      listener: (context, state) {
-        if (state is AddPlaceViewModelSuccess) {
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("✔ تم إضافة المكان بنجاح"),
-              backgroundColor: Colors.green,
-            ),
-          );
-        }
+    return MultiBlocListener(
+      listeners: [
 
-        if (state is AddPlaceViewModelError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error), backgroundColor: Colors.red),
-          );
-        }
-      },
+        /// ========== Listener للإضافة ==========
+        BlocListener<AddPlaceViewModel, AddPlaceViewModelStates>(
+          listener: (context, state) async {
+            if (!widget.isEdit) {
+              if (state is AddPlaceViewModelSuccess) {
+
+                /// تحديث الليستة من الأب الحقيقي
+                widget.parentContext.read<GetAllPlaceViewModel>().getAllPlaces();
+
+                Navigator.pop(context);
+
+                ScaffoldMessenger.of(widget.parentContext).showSnackBar(
+                  const SnackBar(
+                    content: Text("✔ تم إضافة المكان بنجاح"),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              }
+            }
+          },
+        ),
+
+        /// ========== Listener للتعديل ==========
+        BlocListener<UpdatePlaceViewModel, UpdatePlaceViewModelStates>(
+          listener: (context, state) async {
+            if (widget.isEdit) {
+              if (state is UpdatePlaceViewModelSuccess) {
+
+                widget.parentContext.read<GetAllPlaceViewModel>().getAllPlaces();
+
+                Navigator.pop(context);
+
+                ScaffoldMessenger.of(widget.parentContext).showSnackBar(
+                  const SnackBar(
+                    content: Text("✔ تم تحديث المكان بنجاح"),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              }
+            }
+          },
+        ),
+
+
+      ],
+
       child: Padding(
         padding: EdgeInsets.only(
           left: 16.w,
@@ -134,46 +182,48 @@ class _AddPlaceSheetState extends State<AddPlaceSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
               Text(
-                "إضافة مكان جديد",
+                widget.isEdit ? "تعديل المكان" : "إضافة مكان جديد",
                 style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
               ),
+
               SizedBox(height: 20.h),
 
               CustomTextFormField(
                 hintText: "اسم المكان",
                 textEditingController: nameController,
-                keyboardType: TextInputType.name,
               ),
+
               SizedBox(height: 12.h),
 
               CustomTextFormField(
                 hintText: "الوصف",
                 textEditingController: descController,
-                keyboardType: TextInputType.multiline,
                 maxLines: 3,
               ),
+
               SizedBox(height: 12.h),
 
               CustomTextFormField(
                 hintText: "العنوان",
                 textEditingController: addressController,
-                keyboardType: TextInputType.streetAddress,
               ),
+
               SizedBox(height: 12.h),
 
               CustomTextFormField(
                 hintText: "رقم الهاتف",
                 textEditingController: phoneController,
-                keyboardType: TextInputType.phone,
               ),
+
               SizedBox(height: 12.h),
 
               CustomTextFormField(
                 hintText: "رابط الخريطة",
                 textEditingController: mapLinkController,
-                keyboardType: TextInputType.url,
               ),
+
               SizedBox(height: 20.h),
 
               Text("الصور", style: TextStyle(fontSize: 16.sp)),
@@ -183,6 +233,8 @@ class _AddPlaceSheetState extends State<AddPlaceSheet> {
                 spacing: 10,
                 runSpacing: 10,
                 children: [
+
+                  /// زر إضافة صورة جديدة
                   GestureDetector(
                     onTap: pickImages,
                     child: Container(
@@ -196,8 +248,43 @@ class _AddPlaceSheetState extends State<AddPlaceSheet> {
                     ),
                   ),
 
-                  ...imageBytesList.map(
-                    (bytes) => Stack(
+                  /// الصور القديمة
+                  ...oldImages.map(
+                        (url) => Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: Image.network(
+                            url,
+                            height: 80.h,
+                            width: 80.h,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          top: 3,
+                          right: 3,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                oldImages.remove(url);
+                              });
+                            },
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundColor: Colors.red,
+                              child: const Icon(Icons.close,
+                                  size: 16, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  /// الصور الجديدة
+                  ...newImagesBytes.map(
+                        (bytes) => Stack(
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10.r),
@@ -214,17 +301,14 @@ class _AddPlaceSheetState extends State<AddPlaceSheet> {
                           child: InkWell(
                             onTap: () {
                               setState(() {
-                                imageBytesList.remove(bytes);
+                                newImagesBytes.remove(bytes);
                               });
                             },
                             child: CircleAvatar(
                               radius: 12,
                               backgroundColor: Colors.red,
-                              child: const Icon(
-                                Icons.close,
-                                size: 16,
-                                color: Colors.white,
-                              ),
+                              child: const Icon(Icons.close,
+                                  size: 16, color: Colors.white),
                             ),
                           ),
                         ),
@@ -241,13 +325,16 @@ class _AddPlaceSheetState extends State<AddPlaceSheet> {
                   final isLoading = state is AddPlaceViewModelLoading;
 
                   return CustomButton(
-                    text: isLoading ? "جاري الرفع..." : "إضافة",
+                    text: isLoading
+                        ? "جاري الحفظ..."
+                        : (widget.isEdit ? "تحديث" : "إضافة"),
                     onPressed: isLoading ? null : submit,
                   );
                 },
               ),
 
               SizedBox(height: 20.h),
+
             ],
           ),
         ),

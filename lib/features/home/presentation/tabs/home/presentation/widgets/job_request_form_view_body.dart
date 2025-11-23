@@ -58,6 +58,7 @@ class JobRequestFormViewBody extends StatelessWidget {
           status: "pending",
           duration: mapDurationToDays(vm.durationController.text.trim()),
           createdAt: DateTime.now(),
+          userId: "",
         ),
       );
     }

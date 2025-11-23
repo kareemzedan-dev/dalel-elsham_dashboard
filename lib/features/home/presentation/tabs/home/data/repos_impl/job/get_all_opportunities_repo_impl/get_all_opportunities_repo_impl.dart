@@ -14,4 +14,9 @@ class GetAllOpportunitiesRepoImpl implements GetAllOpportunitiesRepo{
   Future<Either<Failures, List<JobEntity>>> getAllOpportunities() {
     return getAllOpportunitiesRemoteDataSource.getAllOpportunities();
   }
+
+  @override
+  Future<Either<Failures, List<JobEntity>>> getPendingOpportunities() {
+   return getAllOpportunitiesRemoteDataSource.getPendingOpportunities();
+  }
  }

@@ -19,18 +19,28 @@ class GetAllProjectDisplaySectionsViewModel
   getAllProjectDisplaySections() async {
     try {
       emit(GetAllProjectDisplaySectionsViewModelLoading());
+
       final result = await getAllProjectDisplaySectionsUseCase
           .getAllProjectDisplaySections();
+
       result.fold(
         ifLeft: (fail) =>
             emit(GetAllProjectDisplaySectionsViewModelError(fail.message)),
-        ifRight: (value) =>
-            emit(GetAllProjectDisplaySectionsViewModelSuccess(value)),
+        ifRight: (value) {
+
+          final sorted = List<ProjectDisplaySectionEntity>.from(value)
+            ..sort((a, b) => a.order!.compareTo(b.order!));
+
+
+          emit(GetAllProjectDisplaySectionsViewModelSuccess(sorted));
+        },
       );
+
       return result;
     } catch (e) {
       emit(GetAllProjectDisplaySectionsViewModelError(e.toString()));
       return Left(ServerFailure(e.toString()));
     }
   }
+
 }

@@ -47,4 +47,10 @@ class ProjectDisplaySectionsRepositoryImpl
 
     return remoteDataSource.addProjectToSection(projectId, sectionId);
   }
+
+  @override
+  Future<Either<Failures, void>> removeProjectFromSection(String projectId, String sectionId) {
+    return remoteDataSource.removeProjectFromSection(projectId, sectionId);
+  }
+
 }

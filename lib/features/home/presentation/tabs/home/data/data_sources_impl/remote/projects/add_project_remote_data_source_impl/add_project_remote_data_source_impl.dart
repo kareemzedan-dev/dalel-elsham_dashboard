@@ -47,6 +47,7 @@ class AddProjectRemoteDataSourceImpl implements AddProjectRemoteDataSource {
         workTimeTo: project.workTimeTo,
         viewCountOn: project.viewCountOn,
          displaySections: project.displaySections,
+        userId: project.userId,
       );
 
       // 🔹 3) حفظ البيانات في Firestore

@@ -1,4 +1,7 @@
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/jobs/get_all_jobs_view_model/get_all_jobs_view_model.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/jobs/get_pending_jobs_view_model/get_pending_jobs_view_model_states.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/jobs/get_pending_opportunity_view_model/get_pending_opportunity_view_model.dart';
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/jobs/get_pending_opportunity_view_model/get_pending_opportunity_view_model_states.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/widgets/Job_opportunities_view_body_management.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/widgets/job_opportunities_view_body.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +17,7 @@ import '../../../../../../../core/enums/request_type.dart';
 import '../manager/jobs/get_all_jobs_view_model/get_all_jobs_view_model_states.dart';
 import '../manager/jobs/get_all_opportunities_view_model/get_all_opportunities_view_model.dart';
 import '../manager/jobs/get_all_opportunities_view_model/get_all_opportunities_view_model_states.dart';
+import '../manager/jobs/get_pending_jobs_view_model/get_pending_jobs_view_model.dart';
 
 class JobOpportunitiesViewManagement extends StatelessWidget {
   JobOpportunitiesViewManagement({super.key, this.title, required this.type});
@@ -27,14 +31,18 @@ class JobOpportunitiesViewManagement extends StatelessWidget {
       appBar: CustomAppBar(title: title!),
       body: type == RequestType.job
           ? BlocProvider(
-              create: (context) => getIt<GetAllJobsViewModel>()..getAllJobs(),
+              create: (context) =>
+                  getIt<GetPendingJobsViewModel>()..getPendingJobs(),
               child:
-                  BlocBuilder<GetAllJobsViewModel, GetAllJobsViewModelStates>(
+                  BlocBuilder<
+                    GetPendingJobsViewModel,
+                    GetPendingJobsViewModelStates
+                  >(
                     builder: (context, state) {
-                      if (state is GetAllJobsViewModelLoading) {
+                      if (state is GetPendingJobsViewModelLoading) {
                         return const Center(child: CircularProgressIndicator());
                       }
-                      if (state is GetAllJobsViewModelSuccess) {
+                      if (state is GetPendingJobsViewModelSuccess) {
                         if (state.jobs.isEmpty) {
                           return Center(
                             child: Column(
@@ -79,17 +87,18 @@ class JobOpportunitiesViewManagement extends StatelessWidget {
             )
           : BlocProvider(
               create: (context) =>
-                  getIt<GetAllOpportunitiesViewModel>()..getAllOpportunities(),
+                  getIt<GetPendingOpportunityViewModel>()
+                    ..getPendingOpportunities(),
               child:
                   BlocBuilder<
-                    GetAllOpportunitiesViewModel,
-                    GetAllOpportunitiesViewModelStates
+                    GetPendingOpportunityViewModel,
+                    GetPendingOpportunityViewModelStates
                   >(
                     builder: (context, state) {
-                      if (state is GetAllOpportunitiesViewModelLoading) {
+                      if (state is GetPendingOpportunityViewModelLoading) {
                         return const Center(child: CircularProgressIndicator());
                       }
-                      if (state is GetAllOpportunitiesViewModelSuccess) {
+                      if (state is GetPendingOpportunityViewModelSuccess) {
                         if (state.jobs.isEmpty) {
                           return Center(
                             child: Column(

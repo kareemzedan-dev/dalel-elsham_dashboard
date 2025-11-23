@@ -32,7 +32,7 @@ class ProjectDisplaySectionModel extends ProjectDisplaySectionEntity {
       "title": title,
       "order": order,
       "isActive": isActive,
-      "createdAt": createdAt.toIso8601String(),
+      "createdAt": createdAt!.toIso8601String(),
     };
   }
 

@@ -25,12 +25,14 @@ class EditCategorySheet extends StatefulWidget {
 
 class _EditCategorySheetState extends State<EditCategorySheet> {
   late TextEditingController nameController;
+  late TextEditingController orderController;
   Uint8List? newImageBytes;
   String? newImageUrl;
 
   @override
   void initState() {
     nameController = TextEditingController(text: widget.category.name);
+    orderController = TextEditingController(text: widget.category.order.toString());
     super.initState();
   }
 
@@ -79,7 +81,7 @@ class _EditCategorySheetState extends State<EditCategorySheet> {
       id: widget.category.id,
       name: nameController.text.trim(),
       imageUrl: newImageUrl ?? widget.category.imageUrl,
-      order: widget.category.order,
+      order: orderController.text.isNotEmpty ? int.parse(orderController.text.trim()) : widget.category.order,
       isActive: widget.category.isActive,
       createdAt: widget.category.createdAt,
     );
@@ -128,6 +130,12 @@ class _EditCategorySheetState extends State<EditCategorySheet> {
               textEditingController: nameController,
               hintText: "اسم الفئة",
               keyboardType: TextInputType.text,
+            ),
+            SizedBox(height: 20.h),
+            CustomTextFormField(
+              textEditingController: orderController,
+              hintText: "رقم ترتيب العنصر",
+              keyboardType: TextInputType.number,
             ),
             SizedBox(height: 20.h),
 

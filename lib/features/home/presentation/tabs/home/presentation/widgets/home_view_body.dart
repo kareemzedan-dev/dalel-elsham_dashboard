@@ -1,3 +1,4 @@
+import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/manager/project_display_section_view_model/update_project_display_section_view_model/update_project_display_section_view_model.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/widgets/skeletons/banner_section_skeleton.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/widgets/skeletons/category_item_list_skeleton.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/presentation/widgets/skeletons/display_sections_skeleton.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../../core/di/di.dart';
 import '../../../../../../../core/utils/colors_manager.dart';
+import '../../domain/entities/project_display_section_entity.dart';
 import '../manager/banners/get_banners_by_position_view_model/get_banners_by_position_view_model.dart';
 import '../manager/banners/get_banners_by_position_view_model/get_banners_by_position_view_model_states.dart';
 import '../manager/categories/get_all_categories_view_model/get_all_categories_view_model.dart';
@@ -14,8 +16,11 @@ import '../manager/categories/get_all_categories_view_model/get_all_categories_v
 
 import '../manager/project_display_section_view_model/add_project_display_section_view_model/add_project_display_section_view_model.dart';
 import '../manager/project_display_section_view_model/add_project_to_section_view_model/add_project_to_section_view_model.dart';
+import '../manager/project_display_section_view_model/delete_project_display_section_view_model/delete_project_display_section_view_model.dart';
+import '../manager/project_display_section_view_model/delete_project_display_section_view_model/delete_project_display_section_view_model_states.dart';
 import '../manager/project_display_section_view_model/get_all_project_display_sections_view_model/get_all_project_display_sections_view_model.dart';
 import '../manager/project_display_section_view_model/get_all_project_display_sections_view_model/get_all_project_display_sections_view_model_states.dart';
+import '../manager/project_display_section_view_model/update_project_display_section_view_model/update_project_display_section_view_model_states.dart';
 import '../manager/projects/get_all_projects_view_model/get_all_projects_view_model.dart';
 import '../manager/projects/get_newest_projects_view_model/get_newest_projects_view_model.dart';
 import '../manager/projects/get_newest_projects_view_model/get_newest_projects_view_model_states.dart';
@@ -49,7 +54,6 @@ class HomeViewBody extends StatelessWidget {
         .state;
     if (displayState is GetAllProjectDisplaySectionsViewModelSuccess) {
       final sections = displayState.projectDisplaySections;
-
     }
 
     await Future.delayed(const Duration(milliseconds: 300));
@@ -69,6 +73,7 @@ class HomeViewBody extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
                 /// TOP BAR
                 TopBarSection(
                   onTap: () {
@@ -96,8 +101,8 @@ class HomeViewBody extends StatelessWidget {
 
                 /// DISPLAY SECTIONS
                 BlocBuilder<
-                  GetAllProjectDisplaySectionsViewModel,
-                  GetAllProjectDisplaySectionsViewModelStates
+                    GetAllProjectDisplaySectionsViewModel,
+                    GetAllProjectDisplaySectionsViewModelStates
                 >(
                   builder: (context, state) {
                     if (state is GetAllProjectDisplaySectionsViewModelLoading) {
@@ -125,7 +130,7 @@ class HomeViewBody extends StatelessWidget {
                           _buildCategories(),
                           SizedBox(height: 30.h),
 
-                          _buildProjectSection(first.id, first.title,context),
+                          _buildProjectSection(first.id, first.title, context),
                           SizedBox(height: 30.h),
 
                           const ServicesSection(),
@@ -135,10 +140,15 @@ class HomeViewBody extends StatelessWidget {
                           SizedBox(height: 30.h),
 
                           ...others.map(
-                                (sec) => Padding(
-                              padding: EdgeInsets.only(bottom: 30.h),
-                              child: _buildProjectSection(sec.id, sec.title, context),
-                            ),
+                                (sec) =>
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 30.h),
+                                  child: _buildProjectSection(
+                                    sec.id,
+                                    sec.title,
+                                    context,
+                                  ),
+                                ),
                           ),
 
                           /// زر إضافة قسم جديد
@@ -148,7 +158,10 @@ class HomeViewBody extends StatelessWidget {
                             child: GestureDetector(
                               onTap: () => _openAddSectionBottomSheet(context),
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 14.w,
+                                  vertical: 10.h,
+                                ),
                                 decoration: BoxDecoration(
                                   color: ColorsManager.primaryColor,
                                   borderRadius: BorderRadius.circular(12.r),
@@ -156,18 +169,24 @@ class HomeViewBody extends StatelessWidget {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(Icons.add, color: Colors.white, size: 22.sp),
+                                    Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                      size: 22.sp,
+                                    ),
                                     SizedBox(width: 6.w),
                                     Text(
                                       "إضافة قسم جديد",
-                                      style: TextStyle(color: Colors.white, fontSize: 15.sp),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15.sp,
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
                             ),
                           ),
-
                         ],
                       );
                     }
@@ -189,8 +208,8 @@ class HomeViewBody extends StatelessWidget {
 
   Widget _buildHomeBanners() {
     return BlocBuilder<
-      GetBannersByPositionViewModel,
-      GetBannersByPositionViewModelStates
+        GetBannersByPositionViewModel,
+        GetBannersByPositionViewModelStates
     >(
       builder: (context, state) {
         if (state is GetBannersByPositionViewModelStatesLoading) {
@@ -210,15 +229,18 @@ class HomeViewBody extends StatelessWidget {
 
   Widget _buildCategories() {
     return BlocBuilder<
-      GetAllCategoriesViewModel,
-      GetAllCategoriesViewModelStates
+        GetAllCategoriesViewModel,
+        GetAllCategoriesViewModelStates
     >(
       builder: (context, state) {
         if (state is GetAllCategoriesViewModelLoading) {
           return const CategoryItemListSkeleton();
         }
         if (state is GetAllCategoriesViewModelSuccess) {
-          return CategoriesSection(categoriesList: state.categories,isAdmin: true,);
+          return CategoriesSection(
+            categoriesList: state.categories,
+            isAdmin: true,
+          );
         }
         return const CategoryItemListSkeleton();
       },
@@ -233,66 +255,207 @@ class HomeViewBody extends StatelessWidget {
     return SectionWidget(
       title: "نورونا جديد",
       child:
-          BlocBuilder<
-            GetNewestProjectsViewModel,
-            GetNewestProjectsViewModelStates
-          >(
-            builder: (context, state) {
-              if (state is GetNewestProjectsViewModelLoading) {
-                return const ProjectListSkeleton();
-              }
-              if (state is GetNewestProjectsViewModelSuccess) {
-                return ProjectsList(projects: state.projects);
-              }
-              return const ProjectListSkeleton();
-            },
-          ),
+      BlocBuilder<
+          GetNewestProjectsViewModel,
+          GetNewestProjectsViewModelStates
+      >(
+        builder: (context, state) {
+          if (state is GetNewestProjectsViewModelLoading) {
+            return const ProjectListSkeleton();
+          }
+          if (state is GetNewestProjectsViewModelSuccess) {
+            return ProjectsList(projects: state.projects,sectionId: "");
+          }
+          return const ProjectListSkeleton();
+        },
+      ),
     );
   }
+// ============================================================
+// PROJECT SECTION
+// ============================================================
+  Widget _buildProjectSection(
+      String id,
+      String title,
+      BuildContext parentContext,
+      ) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => getIt<GetProjectsByDisplaySectionViewModel>()
+            ..getProjectsByDisplaySection(id),
+        ),
+        BlocProvider(
+          create: (_) => getIt<UpdateProjectDisplaySectionViewModel>(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<DeleteProjectDisplaySectionViewModel>(),
+        ),
+      ],
+      child: MultiBlocListener(
+        listeners: [
+          /// ========= LISTENER تحديث القسم =========
+          BlocListener<UpdateProjectDisplaySectionViewModel,
+              UpdateProjectDisplaySectionViewModelStates>(
+            listener: (context, state) {
+              if (state is UpdateProjectDisplaySectionViewModelSuccess) {
+                parentContext
+                    .read<GetAllProjectDisplaySectionsViewModel>()
+                    .getAllProjectDisplaySections();
 
-  // ============================================================
-  // PROJECT SECTION
-  // ============================================================
-
-  Widget _buildProjectSection(String id, String title, BuildContext context) {
-    return BlocProvider(
-      create: (_) =>
-      getIt<GetProjectsByDisplaySectionViewModel>()
-        ..getProjectsByDisplaySection(id),
-
-      child: SectionWidget(
-        title: title,
-        child: BlocBuilder<GetProjectsByDisplaySectionViewModel,
-            GetProjectsByDisplaySectionViewModelStates>(
-          builder: (context, state) {
-            if (state is GetProjectsByDisplaySectionViewModelStatesLoading) {
-              return const ProjectListSkeleton();
-            }
-
-            if (state is GetProjectsByDisplaySectionViewModelStatesSuccess) {
-              if (state.projects.isEmpty) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20.h),
-                  child: Center(
-                    child: Text(
-                      "لا يوجد مشاريع متاحة في هذا القسم حالياً",
-                      style: TextStyle(color: Colors.grey, fontSize: 13.sp),
-                    ),
+                ScaffoldMessenger.of(parentContext).showSnackBar(
+                  const SnackBar(
+                    content: Text("✔ تم تحديث القسم بنجاح"),
+                    backgroundColor: Colors.green,
                   ),
                 );
               }
-              return ProjectsList(projects: state.projects);
-            }
 
-            return const ProjectListSkeleton();
+              if (state is UpdateProjectDisplaySectionViewModelError) {
+                ScaffoldMessenger.of(parentContext).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message!),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+          ),
+
+          /// ========= LISTENER حذف القسم =========
+          BlocListener<DeleteProjectDisplaySectionViewModel,
+              DeleteProjectDisplaySectionViewModelStates>(
+            listener: (context, state) {
+              if (state is DeleteProjectDisplaySectionViewModelSuccess) {
+                parentContext
+                    .read<GetAllProjectDisplaySectionsViewModel>()
+                    .getAllProjectDisplaySections();
+
+                ScaffoldMessenger.of(parentContext).showSnackBar(
+                  const SnackBar(
+                    content: Text("✔ تم حذف القسم بنجاح"),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+
+              if (state is DeleteProjectDisplaySectionViewModelError) {
+                ScaffoldMessenger.of(parentContext).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message!),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+        child: SectionWidget(
+          title: title,
+
+          /// ========== حذف القسم ==========
+          onDeleteTitle: (context) {
+            _showDeleteDialog(context, parentContext, id);
           },
+
+
+          /// ========== تعديل العنوان ==========
+          onEditTitle: (context, newTitle) {
+            final sectionsState = parentContext
+                .read<GetAllProjectDisplaySectionsViewModel>()
+                .state as GetAllProjectDisplaySectionsViewModelSuccess;
+
+            final originalSection = sectionsState.projectDisplaySections
+                .firstWhere((e) => e.id == id);
+
+            context
+                .read<UpdateProjectDisplaySectionViewModel>()
+                .updateProjectDisplaySection(
+              ProjectDisplaySectionEntity(
+                id: originalSection.id,
+                title: newTitle,
+                order: originalSection.order,
+                createdAt: originalSection.createdAt,
+                isActive: originalSection.isActive,
+              ),
+            );
+          },
+
+          onTap: () => _openAddProjectBottomSheet(parentContext, id),
+
+          child: BlocBuilder<GetProjectsByDisplaySectionViewModel,
+              GetProjectsByDisplaySectionViewModelStates>(
+            builder: (context, state) {
+              if (state is GetProjectsByDisplaySectionViewModelStatesLoading) {
+                return const ProjectListSkeleton();
+              }
+
+              if (state is GetProjectsByDisplaySectionViewModelStatesSuccess) {
+                if (state.projects.isEmpty) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.h),
+                    child: Center(
+                      child: Text(
+                        "لا يوجد مشاريع في هذا القسم حالياً",
+                        style: TextStyle(color: Colors.grey, fontSize: 13.sp),
+                      ),
+                    ),
+                  );
+                }
+                return ProjectsList(projects: state.projects,sectionId: id);
+              }
+
+              return const ProjectListSkeleton();
+            },
+          ),
         ),
-        onTap: () => _openAddProjectBottomSheet(context, id),
       ),
     );
   }
 
-  void _openAddProjectBottomSheet(BuildContext context, String sectionId) {
+  void _showDeleteDialog(
+      BuildContext sectionContext,
+      BuildContext parentContext,
+      String sectionId,
+      ) {
+    showDialog(
+      context: sectionContext,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text("حذف القسم"),
+          content: const Text("هل أنت متأكد أنك تريد حذف هذا القسم؟"),
+          actions: [
+            TextButton(
+              child: const Text("إلغاء"),
+              onPressed: () => Navigator.pop(sectionContext),
+            ),
+            TextButton(
+              child: const Text("حذف", style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                Navigator.pop(sectionContext);
+
+                /// هنا أخيرًا هنفذ من context اللي فيه ال BlocProvider
+                sectionContext
+                    .read<DeleteProjectDisplaySectionViewModel>()
+                    .deleteProjectDisplaySection(sectionId);
+
+                /// اعمل refresh للصفحة كلها
+                parentContext
+                    .read<GetAllProjectDisplaySectionsViewModel>()
+                    .getAllProjectDisplaySections();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
+
+
+  void _openAddProjectBottomSheet(BuildContext context, String sectionId, ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -300,11 +463,11 @@ class HomeViewBody extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(
-              create: (_) => getIt<GetAllProjectsViewModel>()..getAllProjects(),
+              create: (_) =>
+              getIt<GetAllProjectsViewModel>()
+                ..getAllProjects(),
             ),
-            BlocProvider(
-              create: (_) => getIt<AddProjectToSectionViewModel>(),
-            ),
+            BlocProvider(create: (_) => getIt<AddProjectToSectionViewModel>()),
           ],
           child: AddProjectToSectionSheet(sectionId: sectionId),
         );
@@ -324,5 +487,4 @@ class HomeViewBody extends StatelessWidget {
       },
     );
   }
-
 }

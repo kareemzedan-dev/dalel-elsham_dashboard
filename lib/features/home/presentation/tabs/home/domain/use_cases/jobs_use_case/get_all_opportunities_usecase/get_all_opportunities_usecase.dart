@@ -11,4 +11,7 @@ class GetAllOpportunitiesUsecase {
   Future<Either<Failures, List<JobEntity>>> getAllOpportunities() {
     return getAllOpportunitiesRepo.getAllOpportunities();
   }
+  Future<Either<Failures, List<JobEntity>>> getPendingOpportunities() {
+    return getAllOpportunitiesRepo.getPendingOpportunities();
+  }
 }

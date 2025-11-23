@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../../../../config/routes/routes_manager.dart';
 import '../../../../../../../core/di/di.dart';
+import '../../../../../../../core/enums/request_type.dart';
 import '../../../../../../../core/utils/assets_manager.dart';
 import '../../../dalel_elsham/presentation/widgets/sponsored_banner.dart';
 import '../../domain/entities/job_entity.dart';
@@ -31,7 +33,22 @@ class JobSeekerCardList extends StatelessWidget {
       itemBuilder: (context, index) {
         return Column(
           children: [
-            JobSeekerCard(job: jobs[index]),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  RoutesManager.adminJobRequestDetails,
+                  arguments: {
+                    "job": jobs[index],
+                    "title":  position == "opportunities" ? "تفاصيل فرص العمل" : "تفاصيل طلبات العمل",
+                    "type": position == "opportunities" ? RequestType.opportunity : RequestType.job,
+                    "approveText":  "تعديل الطلب"  ,
+                    "rejectText":  "حذف الطلب"  ,
+                  },
+                );
+              },
+              child: JobSeekerCard(job: jobs[index]),
+            ),
 
             /// ⭐ بانر كل 5 عناصر
             if ((index + 1) % 5 == 0) ...[

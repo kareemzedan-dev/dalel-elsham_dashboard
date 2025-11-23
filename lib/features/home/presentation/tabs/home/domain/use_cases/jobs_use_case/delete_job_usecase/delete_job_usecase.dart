@@ -11,4 +11,7 @@ class DeleteJobUsecase {
     Future<Either<Failures, void>> deleteJob(String jobId) {
       return deleteJobRepo.deleteJob(jobId);
     }
+    Future<Either<Failures, void>> deleteOpportunity(String opportunityId) {
+      return deleteJobRepo.deleteOpportunity(opportunityId);
+    }
   }

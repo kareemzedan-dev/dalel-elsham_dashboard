@@ -20,4 +20,8 @@ abstract class ProjectDisplaySectionsRemoteDataSource {
     String projectId,
     String sectionId,
   ) ;
+  Future<Either<Failures, void>> removeProjectFromSection(
+    String projectId,
+    String sectionId,
+  ) ;
 }

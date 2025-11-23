@@ -91,4 +91,53 @@ class DalelAlShamPlaceRemoteDataSourceImpl
       return Left(ServerFailure("خطأ أثناء جلب الأماكن: $e"));
     }
   }
+
+  @override
+  Future<Either<Failures, bool>> getSectionStatus(String sectionId) async {
+    try {
+      if (!await NetworkValidation.hasInternet()) {
+        return Left(NetworkFailure("لا يوجد اتصال بالإنترنت"));
+      }
+
+      final doc = await firebaseService.getDocument(
+        collection: "sections",
+        docId: sectionId,
+      );
+
+      if (doc == null || doc["isActive"] == null) {
+        return Right(false); // القيمة الافتراضية لو مش موجود
+      }
+
+      return Right(doc["isActive"] as bool);
+
+    } catch (e) {
+      return Left(ServerFailure("خطأ أثناء جلب حالة القسم: $e"));
+    }
+  }
+
+  @override
+  Future<Either<Failures, void>> updateSectionStatus(
+      String sectionId,
+      bool status,
+      ) async {
+    try {
+      if (!await NetworkValidation.hasInternet()) {
+        return Left(NetworkFailure("لا يوجد اتصال بالإنترنت"));
+      }
+
+      await firebaseService.updateDocument(
+        collection: "sections",
+        docId: sectionId,
+        data: {
+          "isActive": status,
+        },
+      );
+
+      return const Right(null);
+
+    } catch (e) {
+      return Left(ServerFailure("خطأ أثناء تحديث حالة القسم: $e"));
+    }
+  }
+
 }

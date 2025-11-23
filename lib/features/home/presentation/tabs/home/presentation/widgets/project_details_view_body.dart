@@ -10,6 +10,7 @@ import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/prese
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../../../../config/routes/routes_manager.dart';
 import '../../../../../../../core/services/phone_call_service.dart';
 import '../../../../../../../core/utils/assets_manager.dart';
 import '../../../../../../../core/utils/colors_manager.dart';
@@ -90,6 +91,56 @@ class ProjectDetailsViewBody extends StatelessWidget {
                           ProjectDetailsGallery(
                             images: state.project.additionalImages,
                           ),
+                        SizedBox(height: 20.h),
+
+                        /// زر تعديل المشروع
+                        Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                RoutesManager.adminProjectEdit,
+                                arguments: {
+                                  "projectId": state.project.id,
+                                  "projectTitle": state.project.title,
+                                  "approveText": "تعديل المشروع",
+                                  "rejectText": "حذف المشروع كليا",
+                                  "isEdit":true,
+                                }
+
+
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 22.w,
+                                vertical: 12.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: ColorsManager.primaryColor,
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.edit, color: Colors.white, size: 20.sp),
+                                  SizedBox(width: 6.w),
+                                  Text(
+                                    "تعديل المشروع",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 10.h),
+
                       ],
                     ),
                   ),

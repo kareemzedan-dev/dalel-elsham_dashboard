@@ -11,5 +11,7 @@ abstract class DalelAlShamPlaceRemoteDataSource {
   Future<Either<Failures, void>> addPlace(DalelAlShamPlaceModel place);
   Future<Either<Failures, void>> updatePlace(DalelAlShamPlaceModel place);
   Future<Either<Failures, void>> deletePlace(String id);
+  Future<Either<Failures, bool>> getSectionStatus(String sectionId);
+  Future<Either<Failures, void>> updateSectionStatus(String sectionId, bool status);
 
 }

@@ -13,6 +13,18 @@ import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../features/auth/data/data_sources/remote/auth_remote_data_source.dart'
+    as _i432;
+import '../../features/auth/data/data_sources_impl/remote/auth_remote_data_source_impl.dart'
+    as _i420;
+import '../../features/auth/data/repos_impl/auth_repo_impl.dart' as _i704;
+import '../../features/auth/domain/repos/auth_repos/auth_repos.dart' as _i194;
+import '../../features/auth/domain/use_cases/auth_usecase/auth_usecase.dart'
+    as _i1028;
+import '../../features/auth/presentation/manager/login_view_model/login_view_model.dart'
+    as _i573;
+import '../../features/auth/presentation/manager/register_view_model/register_view_model.dart'
+    as _i19;
 import '../../features/home/presentation/tabs/dalel_elsham/data/data_sources/remote/dalel_al_sham_place_remote_data_source/dalel_al_sham_place_remote_data_source.dart'
     as _i636;
 import '../../features/home/presentation/tabs/dalel_elsham/data/data_sources_impl/remote/dalel_al_sham_place_remote_data_source_impl/dalel_al_sham_place_remote_data_source_impl.dart'
@@ -29,8 +41,12 @@ import '../../features/home/presentation/tabs/dalel_elsham/presentation/manager/
     as _i313;
 import '../../features/home/presentation/tabs/dalel_elsham/presentation/manager/get_all_place_view_model/get_all_place_view_model.dart'
     as _i544;
+import '../../features/home/presentation/tabs/dalel_elsham/presentation/manager/get_section_status_view_model/get_section_status_view_model.dart'
+    as _i1059;
 import '../../features/home/presentation/tabs/dalel_elsham/presentation/manager/update_place_view_model/update_place_view_model.dart'
     as _i660;
+import '../../features/home/presentation/tabs/dalel_elsham/presentation/manager/update_section_view_model/update_section_view_model.dart'
+    as _i173;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/app_links_remote_data_source/app_links_remote_data_source.dart'
     as _i455;
 import '../../features/home/presentation/tabs/home/data/data_sources/remote/banner_remote_data_source/banners_remote_data_source.dart'
@@ -273,10 +289,18 @@ import '../../features/home/presentation/tabs/home/presentation/manager/jobs/add
     as _i640;
 import '../../features/home/presentation/tabs/home/presentation/manager/jobs/add_opportunity_view_model/add_opportunity_view_model.dart'
     as _i1036;
+import '../../features/home/presentation/tabs/home/presentation/manager/jobs/delete_job_view_model/delete_job_view_model.dart'
+    as _i67;
+import '../../features/home/presentation/tabs/home/presentation/manager/jobs/delete_opportunity_view_model/delete_opportunity_view_model.dart'
+    as _i24;
 import '../../features/home/presentation/tabs/home/presentation/manager/jobs/get_all_jobs_view_model/get_all_jobs_view_model.dart'
     as _i29;
 import '../../features/home/presentation/tabs/home/presentation/manager/jobs/get_all_opportunities_view_model/get_all_opportunities_view_model.dart'
     as _i1068;
+import '../../features/home/presentation/tabs/home/presentation/manager/jobs/get_pending_jobs_view_model/get_pending_jobs_view_model.dart'
+    as _i613;
+import '../../features/home/presentation/tabs/home/presentation/manager/jobs/get_pending_opportunity_view_model/get_pending_opportunity_view_model.dart'
+    as _i20;
 import '../../features/home/presentation/tabs/home/presentation/manager/jobs/update_job_view_model/update_job_view_model.dart'
     as _i662;
 import '../../features/home/presentation/tabs/home/presentation/manager/jobs/update_opportunity_view_model/update_opportunity_view_model.dart'
@@ -291,6 +315,8 @@ import '../../features/home/presentation/tabs/home/presentation/manager/project_
     as _i745;
 import '../../features/home/presentation/tabs/home/presentation/manager/project_display_section_view_model/get_all_project_display_sections_view_model/get_all_project_display_sections_view_model.dart'
     as _i593;
+import '../../features/home/presentation/tabs/home/presentation/manager/project_display_section_view_model/remove_project_from_section/remove_project_from_section.dart'
+    as _i263;
 import '../../features/home/presentation/tabs/home/presentation/manager/project_display_section_view_model/update_project_display_section_view_model/update_project_display_section_view_model.dart'
     as _i151;
 import '../../features/home/presentation/tabs/home/presentation/manager/projects/add_project_view_model/add_project_view_model.dart'
@@ -375,6 +401,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1046.BannersRemoteDataSource>(
       () => _i576.BannersRemoteDataSourceImpl(gh<_i758.FirebaseService>()),
     );
+    gh.factory<_i432.AuthRemoteDataSource>(
+      () => _i420.AuthRemoteDataSourceImpl(gh<_i758.FirebaseService>()),
+    );
     gh.factory<_i157.GetNewestProjectsRemoteDataSource>(
       () => _i64.GetNewestProjectsRemoteDataSourceImpl(
         gh<_i758.FirebaseService>(),
@@ -441,6 +470,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i786.CategoryRemoteDataSource>(
       () => _i924.CategoryRemoteDataSourceImpl(gh<_i758.FirebaseService>()),
+    );
+    gh.factory<_i194.AuthRepository>(
+      () => _i704.AuthRepoImpl(gh<_i432.AuthRemoteDataSource>()),
     );
     gh.factory<_i925.GetAllProjectsRepository>(
       () => _i528.GetAllProjectsRepositoryImpl(
@@ -534,6 +566,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i529.AddOrUpdateLinkViewModel>(
       () => _i529.AddOrUpdateLinkViewModel(gh<_i1018.AppLinksUseCase>()),
     );
+    gh.factory<_i1028.AuthUseCase>(
+      () => _i1028.AuthUseCase(gh<_i194.AuthRepository>()),
+    );
     gh.factory<_i76.GetBannersByPositionViewModel>(
       () => _i76.GetBannersByPositionViewModel(
         bannerUseCase: gh<_i369.BannerUseCase>(),
@@ -551,6 +586,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i772.GetAllJobsUsecase>(
       () => _i772.GetAllJobsUsecase(gh<_i903.GetAllJobsRepo>()),
+    );
+    gh.factory<_i613.GetPendingJobsViewModel>(
+      () => _i613.GetPendingJobsViewModel(gh<_i903.GetAllJobsRepo>()),
     );
     gh.factory<_i250.GetProjectsByCategoryRepository>(
       () => _i61.GetProjectsByCategoryRepositoryImpl(
@@ -618,9 +656,25 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i365.GetAllOpportunitiesUsecase(gh<_i272.GetAllOpportunitiesRepo>()),
     );
+    gh.factory<_i20.GetPendingOpportunityViewModel>(
+      () => _i20.GetPendingOpportunityViewModel(
+        gh<_i272.GetAllOpportunitiesRepo>(),
+      ),
+    );
+    gh.factory<_i573.LoginViewModel>(
+      () => _i573.LoginViewModel(gh<_i1028.AuthUseCase>()),
+    );
+    gh.factory<_i19.RegisterViewModel>(
+      () => _i19.RegisterViewModel(gh<_i1028.AuthUseCase>()),
+    );
     gh.factory<_i616.GetProjectDetailsViewModel>(
       () => _i616.GetProjectDetailsViewModel(
         gh<_i966.GetProjectDetailsUsecase>(),
+      ),
+    );
+    gh.factory<_i263.RemoveProjectFromSectionViewModel>(
+      () => _i263.RemoveProjectFromSectionViewModel(
+        gh<_i297.ProjectDisplaySectionsUseCase>(),
       ),
     );
     gh.factory<_i376.UpdateJobUsecase>(
@@ -700,6 +754,19 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i111.DeleteJobUsecase>(
       () => _i111.DeleteJobUsecase(gh<_i686.DeleteJobRepo>()),
+    );
+    gh.factory<_i67.DeleteJobViewModel>(
+      () => _i67.DeleteJobViewModel(gh<_i686.DeleteJobRepo>()),
+    );
+    gh.factory<_i24.DeleteOpportunityViewModel>(
+      () => _i24.DeleteOpportunityViewModel(gh<_i686.DeleteJobRepo>()),
+    );
+    gh.factory<_i1059.GetSectionStatusViewModel>(
+      () =>
+          _i1059.GetSectionStatusViewModel(gh<_i340.DalelAlShamPlaceUseCase>()),
+    );
+    gh.factory<_i173.UpdateSectionViewModel>(
+      () => _i173.UpdateSectionViewModel(gh<_i340.DalelAlShamPlaceUseCase>()),
     );
     gh.factory<_i247.UpdateOpportunityViewModel>(
       () =>

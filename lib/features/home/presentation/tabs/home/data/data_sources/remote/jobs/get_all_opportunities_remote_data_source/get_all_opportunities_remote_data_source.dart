@@ -5,4 +5,5 @@ import '../../../../../domain/entities/job_entity.dart';
 
 abstract class GetAllOpportunitiesRemoteDataSource {
   Future<Either<Failures, List<JobEntity>>> getAllOpportunities();
+  Future<Either<Failures, List<JobEntity>>> getPendingOpportunities();
 }

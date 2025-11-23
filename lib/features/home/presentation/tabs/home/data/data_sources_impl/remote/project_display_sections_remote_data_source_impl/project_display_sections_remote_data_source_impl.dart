@@ -36,7 +36,7 @@ class ProjectDisplaySectionsRemoteDataSourceImpl
           "title": section.title,
           "order": section.order,
           "isActive": section.isActive,
-          "createdAt": section.createdAt.toIso8601String(),
+          "createdAt": section.createdAt!.toIso8601String(),
         },
         docId: section.id,
       );
@@ -118,7 +118,7 @@ class ProjectDisplaySectionsRemoteDataSourceImpl
           "title": section.title,
           "order": section.order,
           "isActive": section.isActive,
-          "createdAt": section.createdAt.toIso8601String(),
+          "createdAt": section.createdAt!.toIso8601String(),
         },
       );
 
@@ -153,5 +153,31 @@ class ProjectDisplaySectionsRemoteDataSourceImpl
       return Left(ServerFailure("فشل إضافة المشروع إلى القسم: $e"));
     }
   }
+  @override
+  Future<Either<Failures, void>> removeProjectFromSection(
+      String projectId,
+      String sectionId,
+      ) async {
+    try {
+
+      if (!await NetworkValidation.hasInternet()) {
+        return Left(NetworkFailure("لا يوجد اتصال بالإنترنت"));
+      }
+
+      await firebaseService.updateDocument(
+        collection: "projects",
+        docId: projectId,
+        data: {
+          "displaySections": FieldValue.arrayRemove([sectionId]),
+        },
+      );
+
+      return const Right(null);
+
+    } catch (e) {
+      return Left(ServerFailure("فشل إزالة المشروع من القسم: $e"));
+    }
+  }
+
 
 }

@@ -10,6 +10,7 @@ class JobEntity {
   final String status;
   final int duration; // عدد الأيام التي يظل فيها الإعلان فعال
   final DateTime createdAt;
+  final String userId;
 
   const JobEntity({
     required this.id,
@@ -23,6 +24,7 @@ class JobEntity {
     required this.status,
     required this.duration,
     required this.createdAt,
+    required this.userId,
 
   });
 }

@@ -19,6 +19,8 @@ class AdminJobRequestDetailsViewBody extends StatelessWidget {
     required this.descriptionController,
     required this.durationController,
     required this.selectedTier,
+    required this.approveText,
+    required this.rejectText,
   });
 
   final ValueChanged<String?> onTierChanged;  // ← هنا اتحلت
@@ -26,6 +28,8 @@ class AdminJobRequestDetailsViewBody extends StatelessWidget {
   final String title;
   final VoidCallback onApprove;
   final VoidCallback onReject;
+  final String approveText;
+  final String rejectText;
 
   final TextEditingController titleController;
   final TextEditingController locationController;
@@ -71,8 +75,8 @@ class AdminJobRequestDetailsViewBody extends StatelessWidget {
             ActionButtonsSection(
               onApprove: onApprove,
               onReject: onReject,
-              approveText: "قبول الطلب",
-              rejectText: "رفض الطلب",
+              approveText: approveText,
+              rejectText:  rejectText,
             ),
           ],
         ),

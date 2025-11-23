@@ -12,4 +12,9 @@ class DeleteJobRepoImpl implements DeleteJobRepo {
   Future<Either<Failures, void>> deleteJob(String jobId) {
     return deleteJobRemoteDataSource.deleteJob(jobId);
   }
+
+  @override
+  Future<Either<Failures, void>> deleteOpportunity(String opportunityId) {
+ return deleteJobRemoteDataSource.deleteOpportunity(opportunityId);
+  }
 }

@@ -5,4 +5,5 @@ import '../../../entities/job_entity.dart';
 
 abstract class GetAllJobsRepo {
   Future<Either<Failures, List<JobEntity>>> getAllJobs();
+  Future<Either<Failures, List<JobEntity>>> getPendingJobs();
 }

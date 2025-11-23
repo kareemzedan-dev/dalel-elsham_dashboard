@@ -6,9 +6,14 @@ import '../../../../../../../config/routes/routes_manager.dart';
 import '../../../../../../../core/utils/colors_manager.dart';
 
 class ProjectItem extends StatelessWidget {
-  const ProjectItem({super.key, required this.projectEntity});
+  const ProjectItem({
+    super.key,
+    required this.projectEntity,
+      this.onDelete,
+  });
 
   final ProjectEntity projectEntity;
+  final VoidCallback ? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -40,31 +45,83 @@ class ProjectItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// IMAGE
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10.r),
-              child: SizedBox(
-                height: 120.h,
-                width: double.infinity,
-                child: Image.network(projectEntity.logo, fit: BoxFit.cover),
-              ),
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10.r),
+                  child: SizedBox(
+                    height: 120.h,
+                    width: double.infinity,
+                    child: Image.network(
+                      projectEntity.logo,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+
+                /// زر X
+                Positioned(
+                  top: 6,
+                  right: 6,
+                  child: GestureDetector(
+                    onTap: () async {
+                      final confirm = await showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text("تأكيد الحذف"),
+                          content: const Text(
+                            "هل تريد حذف هذا المشروع من هذه المجموعة؟",
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text("إلغاء"),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: const Text(
+                                "حذف",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+
+                      if (confirm == true) {
+                        onDelete!();
+                      }
+                    },
+
+                    child: onDelete != null ? Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.6),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.close,
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                    ):null
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 10.h),
 
-            /// TITLE
             Text(
               projectEntity.title,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-                fontSize: 15.sp,
-                height: 1.2,
-              ),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w800, fontSize: 15.sp),
             ),
             SizedBox(height: 4.h),
 
-            /// DESCRIPTION
             Text(
               projectEntity.description,
               maxLines: 2,
@@ -72,13 +129,11 @@ class ProjectItem extends StatelessWidget {
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w500,
                 fontSize: 13.sp,
-                height: 1.2,
                 color: Colors.grey[700],
               ),
             ),
             SizedBox(height: 6.h),
 
-            /// LOCATION
             Row(
               children: [
                 Icon(

@@ -1,5 +1,6 @@
 import 'package:dlyl_alsham_dashboard/config/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -26,6 +27,13 @@ Future<void> main() async {
   await SharedPrefHelper.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
   runApp(
     /// --------------- إضافة الـ Provider هنا فوق التطبيق كله ----------------
     MultiBlocProvider(

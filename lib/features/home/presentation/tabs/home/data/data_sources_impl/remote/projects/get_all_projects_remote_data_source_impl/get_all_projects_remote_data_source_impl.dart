@@ -14,7 +14,6 @@ class GetAllProjectsRemoteDataSourceImpl
   final FirebaseService fireStoreService;
 
   GetAllProjectsRemoteDataSourceImpl(this.fireStoreService);
-
   @override
   Future<Either<Failures, List<ProjectEntity>>> getAllProjects() async {
     try {
@@ -27,9 +26,30 @@ class GetAllProjectsRemoteDataSourceImpl
       final List<Map<String, dynamic>> rawData =
       await fireStoreService.getCollection(collection: "projects");
 
-      // 3) فلترة المشاريع المعتمدة فقط
+      // 3) فلترة المشاريع (approved + غير منتهية)
       final filtered = rawData.where((item) {
-        return item["status"] == "approved";
+        final status = item["status"];
+        if (status != "approved") return false;
+
+        // createdAt
+        final createdAt = DateTime.tryParse(item["createdAt"] ?? "") ??
+            DateTime(2000);
+
+        // duration
+        int durationDays = 7; // fallback
+
+        if (item["duration"] != null) {
+          final match = RegExp(r'\d+').firstMatch(item["duration"].toString());
+          if (match != null) {
+            durationDays = int.parse(match.group(0)!);
+          }
+        }
+
+        // هل المشروع منتهي؟
+        final isExpired =
+            DateTime.now().difference(createdAt).inDays >= durationDays;
+
+        return !isExpired;
       }).toList();
 
       // 4) تحويل البيانات

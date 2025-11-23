@@ -10,6 +10,7 @@ import '../../../../models/project_model.dart';
 @Injectable(as: GetProjectsByCategoryRemoteDataSource)
 class GetProjectsByCategoryRemoteDataSourceImpl
     implements GetProjectsByCategoryRemoteDataSource {
+
   final FirebaseService fireStoreService;
 
   GetProjectsByCategoryRemoteDataSourceImpl(this.fireStoreService);
@@ -28,27 +29,45 @@ class GetProjectsByCategoryRemoteDataSourceImpl
         value: category,
       );
 
-      for (var item in result) {
-        print("🔥 RAW: $item");
-      }
+      // 🔥 فلترة المشاريع المعتمدة + اللي مدتها لسه ما خلصتش
+      final filtered = result.where((item) {
+        final data = item["data"];
 
+        final isApproved = data["status"] == "approved";
 
-      print("🔥🔥 RAW DATA FROM FIRESTORE:");
-      for (var item in result) {
-        print("DocID => ${item['id']}");
-        print("Data => ${item['data']}");
-        print("=======================================");
-      }
+        // 🔹 createdAt
+        final createdAt = DateTime.tryParse(data["createdAt"] ?? "") ?? DateTime(2000);
 
-      final List<ProjectEntity> projects = result.map((item) {
+        // 🔹 duration من Firebase
+        final rawDuration = data["duration"];
+
+        // 🟦 تحويل الـ duration لأي فورمات متوقعة
+        int durationDays = 7; // default fallback
+
+        if (rawDuration != null) {
+          // لو duration مكتوبة "7 days"
+          final extracted = RegExp(r'\d+').firstMatch(rawDuration.toString());
+          if (extracted != null) {
+            durationDays = int.parse(extracted.group(0)!);
+          }
+        }
+
+        // 🔥 هل انتهت مدة المشروع؟
+        final isExpired = DateTime.now().difference(createdAt).inDays >= durationDays;
+
+        return isApproved && !isExpired;
+      }).toList();
+
+      final List<ProjectEntity> projects = filtered.map((item) {
         return ProjectModel.fromMap(item["data"], item["id"]);
       }).toList();
 
       return Right(projects);
+
     } catch (e) {
       print("🔥🔥 ERROR => $e");
       return Left(ServerFailure("فشل في جلب المشاريع حسب الفئة: $e"));
     }
   }
-
 }
+

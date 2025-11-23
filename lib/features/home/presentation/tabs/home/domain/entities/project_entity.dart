@@ -28,6 +28,7 @@ class ProjectEntity {
   final String? workTimeTo;
   final List<String> displaySections;
   final bool viewCountOn;
+  final String userId;
 
 
 
@@ -41,7 +42,7 @@ class ProjectEntity {
     required this.logo,
     required this.phone,
     required this.location,
-    this.mapLink,              // هنا
+    this.mapLink,
     required this.isActive,
     required this.duration,
     required this.createdAt,
@@ -57,5 +58,6 @@ class ProjectEntity {
     this.workTimeTo,
     required this.displaySections,
     this.viewCountOn = false,
+    required this.userId,
   });
 }

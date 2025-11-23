@@ -14,4 +14,9 @@ class GetAllJobsRepoImpl implements GetAllJobsRepo{
   Future<Either<Failures, List<JobEntity>>> getAllJobs() {
     return getAllJobsRemoteDataSource.getAllJobs();
   }
+
+  @override
+  Future<Either<Failures, List<JobEntity>>> getPendingJobs() {
+    return getAllJobsRemoteDataSource.getPendingJobs();
+  }
 }

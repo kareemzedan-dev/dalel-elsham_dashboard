@@ -4,4 +4,5 @@ import '../../../../../../../../../core/errors/failures.dart';
 
 abstract class DeleteJobRepo {
   Future<Either<Failures, void>> deleteJob(String jobId);
+  Future<Either<Failures, void>> deleteOpportunity(String opportunityId);
 }

@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../domain/entities/project_entity.dart';
 import '../manager/project_display_section_view_model/add_project_to_section_view_model/add_project_to_section_view_model.dart';
 import '../manager/project_display_section_view_model/add_project_to_section_view_model/add_project_to_section_view_model_states.dart';
+import '../manager/projects/get_projects_by_display_section_view_model/get_projects_by_display_section_view_model.dart';
 
 class AddProjectToSectionSheet extends StatefulWidget {
   final String sectionId;
@@ -29,6 +30,10 @@ class _AddProjectToSectionSheetState extends State<AddProjectToSectionSheet> {
         if (state is AddProjectToSectionViewModelSuccess) {
           Navigator.pop(context);
 
+          /// 🟢 إعادة تحميل المشاريع داخل هذا القسم
+          context.read<GetProjectsByDisplaySectionViewModel>()
+              .getProjectsByDisplaySection(widget.sectionId);
+
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text("تم إضافة المشروع إلى القسم بنجاح"),
@@ -46,6 +51,7 @@ class _AddProjectToSectionSheetState extends State<AddProjectToSectionSheet> {
           );
         }
       },
+
 
       child: Container(
         padding: EdgeInsets.all(16.w),

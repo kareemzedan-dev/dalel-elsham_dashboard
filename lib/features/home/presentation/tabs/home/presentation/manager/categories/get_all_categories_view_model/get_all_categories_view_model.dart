@@ -6,11 +6,13 @@ import '../../../../../../../../../core/errors/failures.dart';
 import '../../../../domain/entities/category_entity.dart';
 import '../../../../domain/use_cases/category_use_case/category_use_case.dart';
 import 'get_all_categories_view_model_states.dart';
-@injectable
-class GetAllCategoriesViewModel extends Cubit<GetAllCategoriesViewModelStates>{
-  final CategoryUseCase categoryUseCase;
-  GetAllCategoriesViewModel(this.categoryUseCase): super(GetAllCategoriesViewModelInitial());
 
+@injectable
+class GetAllCategoriesViewModel extends Cubit<GetAllCategoriesViewModelStates> {
+  final CategoryUseCase categoryUseCase;
+
+  GetAllCategoriesViewModel(this.categoryUseCase)
+    : super(GetAllCategoriesViewModelInitial());
 
   Future<Either<Failures, List<CategoryEntity>>> getAllCategories() async {
     try {
@@ -21,8 +23,10 @@ class GetAllCategoriesViewModel extends Cubit<GetAllCategoriesViewModelStates>{
       result.fold(
         ifLeft: (failure) =>
             emit(GetAllCategoriesViewModelError(failure.message)),
-        ifRight: (categories) =>
-            emit(GetAllCategoriesViewModelSuccess(categories)),
+        ifRight: (categories) {
+          categories.sort((a, b) => a.order.compareTo(b.order));
+          emit(GetAllCategoriesViewModelSuccess(categories));
+        },
       );
 
       return result;
@@ -31,5 +35,4 @@ class GetAllCategoriesViewModel extends Cubit<GetAllCategoriesViewModelStates>{
       return Left(ServerFailure(e.toString()));
     }
   }
-
 }

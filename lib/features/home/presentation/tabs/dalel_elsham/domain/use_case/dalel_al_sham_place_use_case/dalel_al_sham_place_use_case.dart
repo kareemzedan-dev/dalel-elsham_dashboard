@@ -24,5 +24,11 @@ import '../../repos/dalel_al_sham_place_repo/dalel_al_sham_place_repo.dart';
    Future<Either<Failures, void>> deletePlace(String id) async {
     return await dalelAlShamPlaceRepo.deletePlace(id);
    }
+   Future<Either<Failures, bool>> getSectionStatus(String sectionId) async {
+     return await dalelAlShamPlaceRepo.getSectionStatus(sectionId);
+   }
+   Future<Either<Failures, void>> updateSectionStatus(String sectionId, bool status) async {
+     return await dalelAlShamPlaceRepo.updateSectionStatus(sectionId, status);
+   }
 
  }

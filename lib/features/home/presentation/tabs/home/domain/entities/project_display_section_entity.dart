@@ -1,9 +1,9 @@
 class ProjectDisplaySectionEntity {
   final String id;            // example: featured, newest, etc.
   final String title;         // عنوان القسم
-  final int order;            // ترتيب الظهور
+  final int  ? order;            // ترتيب الظهور
   final bool isActive;        // هل القسم مفعّل؟
-  final DateTime createdAt;   // تاريخ الإنشاء
+  final DateTime  ? createdAt;   // تاريخ الإنشاء
 
   const ProjectDisplaySectionEntity({
     required this.id,

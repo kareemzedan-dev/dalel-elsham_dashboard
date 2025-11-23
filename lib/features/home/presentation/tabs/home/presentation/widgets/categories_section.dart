@@ -44,6 +44,8 @@ class CategoriesSection extends StatelessWidget {
                   ?.copyWith(fontWeight: FontWeight.bold),
             ),
 
+
+
             if (isAdmin)
               GestureDetector(
                 onTap: () {
@@ -73,7 +75,7 @@ class CategoriesSection extends StatelessWidget {
           ],
         ),
 
-        const SizedBox(height: 16),
+          SizedBox(height: 16.h),
 
         /// أهم جزء في الحل 🔥🔥🔥
         /// هنا CategoryItemList أصبح تحت Provider delete

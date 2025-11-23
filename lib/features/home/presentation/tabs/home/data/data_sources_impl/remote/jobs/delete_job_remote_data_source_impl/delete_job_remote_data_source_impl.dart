@@ -31,4 +31,24 @@ class DeleteJobRemoteDataSourceImpl implements DeleteJobRemoteDataSource {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failures, void>> deleteOpportunity(String opportunityId) async{
+    try {
+      if (!await NetworkValidation.hasInternet()) {
+        return Left(NetworkFailure("لا يوجد اتصال بالإنترنت"));
+      }
+      await firebaseService.deleteDocument(
+        collection: "opportunities",
+        docId: opportunityId,
+      );
+
+      return const Right(null); // صح
+
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+
+    }
+
+  }
 }

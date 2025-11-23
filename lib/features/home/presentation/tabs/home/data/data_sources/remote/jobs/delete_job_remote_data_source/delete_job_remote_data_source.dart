@@ -5,4 +5,5 @@ import '../../../../../domain/entities/job_entity.dart';
 
 abstract class DeleteJobRemoteDataSource {
   Future<Either<Failures, void>> deleteJob(String jobId);
+  Future<Either<Failures, void>> deleteOpportunity(String opportunityId);
 }
