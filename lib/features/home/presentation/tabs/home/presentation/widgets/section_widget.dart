@@ -11,6 +11,7 @@ class SectionWidget extends StatelessWidget {
     this.onTap,
     this.onEditTitle,
     this.onDeleteTitle,
+    this.onEditOrder,
   });
 
   final String title;
@@ -19,6 +20,7 @@ class SectionWidget extends StatelessWidget {
 
   /// حدث التعديل
   final Function(BuildContext context, String newTitle)? onEditTitle;
+  final Function(BuildContext context, int newOrder)? onEditOrder;
 
 
   /// حدث الحذف
@@ -103,12 +105,82 @@ class SectionWidget extends StatelessWidget {
                   onDeleteTitle?.call(context);
                 },
               ),
+
+              ListTile(
+                leading: Icon(Icons.format_list_numbered, color: Colors.orange),
+                title: Text("تعديل الترتيب"),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showEditOrderDialog(context);
+                },
+              ),
+
             ],
           ),
         );
       },
     );
   }
+  void _showEditOrderDialog(BuildContext context) {
+    final controller = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text("تعديل ترتيب القسم"),
+          content: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              hintText: "ادخل رقم الترتيب الجديد",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "إلغاء",
+                style: TextStyle(
+                  color: ColorsManager.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final newOrder = int.tryParse(controller.text.trim());
+
+                if (newOrder == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("❌ يجب إدخال رقم صحيح"),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+
+                Navigator.pop(context);
+
+                /// استدعاء الكول باك وإرسال القيمة الجديدة
+                onEditOrder?.call(context, newOrder);
+              },
+              child: Text(
+                "حفظ",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   /// ---------------- Dialog تعديل العنوان ----------------
   void _showEditTitleDialog(BuildContext context) {

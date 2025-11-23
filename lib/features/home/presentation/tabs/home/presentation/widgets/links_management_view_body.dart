@@ -65,7 +65,7 @@ class _LinksManagementViewBodyState extends State<LinksManagementViewBody> {
                 youtubeId = link.id;
                 youtubeController.text = link.url;
                 break;
-              case "twitter":
+              case "tiktok":
                 twitterId = link.id;
                 twitterController.text = link.url;
                 break;
@@ -137,7 +137,7 @@ class _LinksManagementViewBodyState extends State<LinksManagementViewBody> {
                 _buildTextField("يوتيوب", youtubeController),
                 SizedBox(height: 12.h),
 
-                _buildTextField("تويتر / X", twitterController),
+                _buildTextField("تيك توك", twitterController),
                 SizedBox(height: 25.h),
 
                 /// =======================
@@ -158,7 +158,7 @@ class _LinksManagementViewBodyState extends State<LinksManagementViewBody> {
                 _buildLabel("معلومات التواصل"),
                 SizedBox(height: 15.h),
 
-                _buildTextField("رقم الهاتف", phoneController),
+                _buildTextField("واتس اب", phoneController),
                 SizedBox(height: 12.h),
 
                 _buildTextField("البريد الإلكتروني", emailController),

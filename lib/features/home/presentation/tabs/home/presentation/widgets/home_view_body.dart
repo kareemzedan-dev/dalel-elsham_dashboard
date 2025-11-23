@@ -357,6 +357,26 @@ class HomeViewBody extends StatelessWidget {
           onDeleteTitle: (context) {
             _showDeleteDialog(context, parentContext, id);
           },
+          onEditOrder: (context, newOrder) {
+            final sectionsState = parentContext
+                .read<GetAllProjectDisplaySectionsViewModel>()
+                .state as GetAllProjectDisplaySectionsViewModelSuccess;
+
+            final originalSection = sectionsState.projectDisplaySections
+                .firstWhere((e) => e.id == id);
+
+            context
+                .read<UpdateProjectDisplaySectionViewModel>()
+                .updateProjectDisplaySection(
+              ProjectDisplaySectionEntity(
+                id: originalSection.id,
+                title: originalSection.title,
+                order: newOrder,
+                createdAt: originalSection.createdAt,
+                isActive: originalSection.isActive,
+              ),
+            );
+          },
 
 
           /// ========== تعديل العنوان ==========
