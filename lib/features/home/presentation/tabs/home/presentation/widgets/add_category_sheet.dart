@@ -29,6 +29,7 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
   final TextEditingController orderController = TextEditingController();
   Uint8List? imageBytes;
   String? imageUrl;
+  bool isUploading = false;
 
   Future<void> pickImage() async {
     final choice = await showImageSourcePicker(context);
@@ -40,21 +41,36 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
         : await picker.pickFromCamera();
 
     if (!result.isEmpty) {
-      setState(() => imageBytes = result.bytes);
+      setState(() {
+        imageBytes = result.bytes;
+        isUploading = true;
+      });
 
-      /// رفع الصورة
       final uploader = ImageUploadService();
-      imageUrl = await uploader.uploadImage(
+      final url = await uploader.uploadImage(
         bytes: result.bytes!,
         bucket: "categories",
         folder: "images",
       );
 
-      setState(() {});
+      setState(() {
+        imageUrl = url;
+        isUploading = false;
+      });
     }
   }
 
   void submit() {
+    if (isUploading) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("⏳ جاري رفع الصورة... برجاء الانتظار"),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
     if (nameController.text.isEmpty || imageUrl == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -176,11 +192,14 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                 final isLoading = state is AddCategoryViewModelLoading;
 
                 return CustomButton(
-                  text: isLoading ? "جاري الرفع..." : "إضافة",
-                  onPressed: isLoading ? null : submit,
+                  text: (isLoading || isUploading)
+                      ? "جاري الرفع..."
+                      : "إضافة",
+                  onPressed: (isLoading || isUploading) ? null : submit,
                 );
               },
-            ),
+            )
+
           ],
         ),
       ),

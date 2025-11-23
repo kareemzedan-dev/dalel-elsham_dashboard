@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../../core/utils/colors_manager.dart';
@@ -33,11 +34,21 @@ class CategoryItem extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: ClipOval(
-                  child: Image.network(
-                    image,
+                  child: CachedNetworkImage(
+                    imageUrl: image,
                     fit: BoxFit.cover,
                     height: 50.h,
                     width: 50.w,
+                    placeholder: (_, __) => Container(
+                      height: 50.h,
+                      width: 50.w,
+                      color: Colors.black12,
+                    ),
+                    errorWidget: (_, __, ___) => Icon(
+                      Icons.error,
+                      size: 20.sp,
+                      color: Colors.red,
+                    ),
                   ),
                 ),
               ),
@@ -55,7 +66,7 @@ class CategoryItem extends StatelessWidget {
                         color: Colors.black54,
                         shape: BoxShape.circle,
                       ),
-                      child:   Icon(
+                      child: Icon(
                         Icons.more_vert,
                         color: Colors.white,
                         size: 16.sp,

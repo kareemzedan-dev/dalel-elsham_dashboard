@@ -41,9 +41,7 @@ class _HomeViewState extends State<HomeView> {
         BlocProvider(
           create: (_) => getIt<GetBannersByPositionViewModel>()..getBannersByPosition("home"),
         ),
-        BlocProvider(
-          create: (_) => getIt<GetAllCategoriesViewModel>()..getAllCategories(),
-        ),
+
         BlocProvider(
           create: (_) => getIt<GetAllProjectDisplaySectionsViewModel>()..getAllProjectDisplaySections(),
         ),

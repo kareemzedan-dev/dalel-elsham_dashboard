@@ -239,8 +239,8 @@ class _LinksManagementViewBodyState extends State<LinksManagementViewBody> {
             ),
             AppLinkEntity(
               id: twitterId,
-              type: "twitter",
-              title: "Twitter",
+              type: "Tiktok",
+              title: "tiktok",
               url: twitterController.text,
             ),
             AppLinkEntity(

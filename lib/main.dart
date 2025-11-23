@@ -1,14 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dlyl_alsham_dashboard/config/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 import 'config/routes/routes_manager.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/cache/shared_preferences.dart';
 import 'core/di/di.dart' as di;
+import 'core/di/di.dart';
+import 'features/home/presentation/tabs/home/presentation/manager/categories/get_all_categories_view_model/get_all_categories_view_model.dart';
 import 'firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,11 +39,14 @@ Future<void> main() async {
     sound: true,
   );
   runApp(
-    /// --------------- إضافة الـ Provider هنا فوق التطبيق كله ----------------
+
     MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (_) => di.getIt<DeleteCategoryViewModel>(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<GetAllCategoriesViewModel>()..getAllCategories(),
         ),
       ],
       child: const DalelElshamDashboard(),
