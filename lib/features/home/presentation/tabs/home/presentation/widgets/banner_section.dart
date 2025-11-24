@@ -4,8 +4,11 @@ import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/domai
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 import '../../../../../../../core/services/open_url_service.dart';
 import '../../../../../../../core/utils/colors_manager.dart';
+
 class BannerSection extends StatefulWidget {
   const BannerSection({
     super.key,
@@ -19,7 +22,6 @@ class BannerSection extends StatefulWidget {
   final bool showDotsOnTop;
   final bool disableAutoPlay;
 
-  /// 🔥 دالة الحذف الجديدة
   final Function(String bannerId)? onDelete;
 
   @override
@@ -80,16 +82,26 @@ class _BannerSectionState extends State<BannerSection> {
                       );
                     }
                   },
-                  child: Image.network(
-                    banner.imageUrl,
+
+                  /// 🔵 هنا الكاش
+                  child: CachedNetworkImage(
+                    imageUrl: banner.imageUrl,
                     fit: BoxFit.fill,
                     width: double.infinity,
+
+                    placeholder: (_, __) => Container(
+                      color: Colors.black12,
+                    ),
+
+                    errorWidget: (_, __, ___) => Container(
+                      color: Colors.black12,
+                      child: Icon(Icons.error, color: Colors.red),
+                    ),
                   ),
                 ),
               ),
             ),
 
-            /// ---------------- زر الحذف (يظهر فقط لو onDelete != null) ----------------
             if (widget.onDelete != null)
               Positioned(
                 top: 12,
@@ -110,10 +122,10 @@ class _BannerSectionState extends State<BannerSection> {
                   ),
                 ),
               ),
-
           ],
         );
       },
+
       options: CarouselOptions(
         height: 200.h,
         autoPlay: !widget.disableAutoPlay,

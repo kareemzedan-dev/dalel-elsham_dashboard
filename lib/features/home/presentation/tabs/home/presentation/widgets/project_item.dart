@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dlyl_alsham_dashboard/features/home/presentation/tabs/home/domain/entities/project_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,12 +53,29 @@ class ProjectItem extends StatelessWidget {
                   child: SizedBox(
                     height: 120.h,
                     width: double.infinity,
-                    child: Image.network(
-                      projectEntity.logo,
+                    child: CachedNetworkImage(
+                      imageUrl: projectEntity.logo,
                       fit: BoxFit.cover,
+
+                      placeholder: (_, __) => Container(
+                        color: Colors.black12,
+                        child: Center(
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+
+                      errorWidget: (_, __, ___) => Container(
+                        color: Colors.black12,
+                        child: Icon(
+                          Icons.broken_image,
+                          color: Colors.red,
+                          size: 30.sp,
+                        ),
+                      ),
                     ),
                   ),
                 ),
+
 
                 /// زر X
                 Positioned(

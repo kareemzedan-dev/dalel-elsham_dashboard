@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../../config/routes/routes_manager.dart';
 import '../../domain/entities/category_entity.dart';
 import '../manager/categories/delete_category_view_model/delete_category_view_model.dart';
+import '../manager/categories/delete_category_view_model/delete_category_view_model_states.dart';
 import 'category_item.dart';
 import 'admin_category_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,7 +33,8 @@ class CategoryItemList extends StatelessWidget {
       child: Stack(
         children: [
           GridView.count(
-            crossAxisCount: 3,           // ⭐ ثلاث صفوف فقط
+            crossAxisCount: 3,
+            // ⭐ ثلاث صفوف فقط
             scrollDirection: Axis.horizontal,
             childAspectRatio: itemWidth / itemHeight,
             mainAxisSpacing: 12.h,
@@ -76,8 +78,11 @@ class CategoryItemList extends StatelessWidget {
                   end: Alignment.centerRight,
                 ),
               ),
-              child: Icon(Icons.keyboard_arrow_right,
-                  color: Colors.black45, size: 24.sp),
+              child: Icon(
+                Icons.keyboard_arrow_right,
+                color: Colors.black45,
+                size: 24.sp,
+              ),
             ),
           ),
 
@@ -99,27 +104,44 @@ class CategoryItemList extends StatelessWidget {
                   end: Alignment.centerRight,
                 ),
               ),
-              child: Icon(Icons.keyboard_arrow_left,
-                  color: Colors.black45, size: 24.sp),
+              child: Icon(
+                Icons.keyboard_arrow_left,
+                color: Colors.black45,
+                size: 24.sp,
+              ),
             ),
           ),
         ],
       ),
     );
   }
-
   void _showAdminOptions(BuildContext context, CategoryEntity category) {
     showModalBottomSheet(
       context: context,
       builder: (_) {
         return BlocProvider.value(
           value: context.read<DeleteCategoryViewModel>(),
-          child: AdminCategoryOptions(
-            category: category,
-            parentContext: context,
+          child: BlocListener<DeleteCategoryViewModel, DeleteCategoryViewModelStates>(
+            listener: (context, state) {
+              if (state is DeleteCategoryViewModelSuccess) {
+                Navigator.pop(context); // يقفل الشيت
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("تم حذف الفئة بنجاح")),
+                );
+              }
+
+              if (state is DeleteCategoryViewModelError) {
+                Navigator.pop(context); // يقفل الشيت
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message)),
+                );
+              }
+            },
+            child: AdminCategoryOptions(category: category,parentContext: context,),
           ),
         );
       },
     );
   }
+
 }

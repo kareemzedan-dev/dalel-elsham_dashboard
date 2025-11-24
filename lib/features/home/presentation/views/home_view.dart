@@ -38,21 +38,13 @@ class _HomeViewState extends State<HomeView> {
   late final List<Widget> _pages = [
     MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => getIt<GetBannersByPositionViewModel>()..getBannersByPosition("home"),
-        ),
-
-        BlocProvider(
-          create: (_) => getIt<GetAllProjectDisplaySectionsViewModel>()..getAllProjectDisplaySections(),
-        ),
-        BlocProvider(
-          create: (_) => getIt<GetNewestProjectsViewModel>()..getNewestProjects(),
-        ),
 
 
-        BlocProvider(
-          create: (_) => getIt<GetProjectsByDisplaySectionViewModel>(),
-        ),
+
+
+
+
+
         BlocProvider(
           create: (_) => getIt<DeleteCategoryViewModel>(),
         ),

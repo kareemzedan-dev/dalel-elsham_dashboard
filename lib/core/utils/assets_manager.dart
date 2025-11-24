@@ -10,9 +10,9 @@ class AssetsManager {
   static const String project1 = '$baseUrl/project1.jpg';
   static const String project2 = '$baseUrl/project2.jpg';
   static const String project3 = '$baseUrl/project3.jpg';
-  static const String service1 = '$baseUrl/service1.jpg';
-    static const String service2 = '$baseUrl/service2.jpg';
-    static const String service3 = '$baseUrl/service3.jpg';
+  static const String service1 = '$baseUrl/mawaqet.jpg';
+    static const String service2 = '$baseUrl/jobs.jpg';
+    static const String service3 = '$baseUrl/opport.jpg';
     static const String profile = '$baseUrl/profile.png';
     static const String whatsapp = '$baseUrl/whatsapp.png';
     static const String phoneCall = '$baseUrl/phone_call.png';
